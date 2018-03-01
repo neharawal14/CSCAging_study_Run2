@@ -7,7 +7,7 @@ The following works from the IHEPA machines and requires a CMSSW release to be i
 It was tested under CMSSW_8_0_27.
  
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-cmsrel CMSSW_8_0_27/src
+cmsrel CMSSW_8_0_27 
 cd CMSSW_8_0_27/src
 cmsenv 
 

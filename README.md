@@ -46,6 +46,9 @@ root -l -b -q ../Src/HistMan_cxx.so ../Src/AnalysisGasGain_cxx.so analysisgasgai
 
 One file is produced for each station/ring/HV segment separately. They all contain a tree where each event corresponds to a rechit. 
 (N.B. one can probably reduce the file size by a significant amount by changing the format and saving multiple hits in the same event...)
+Two important variables here are 
+_rhsumQRAW: ADC charge as measured during the data taking
+_rhsumQ: ADC charge, undoing the HV changes made in the latest data. (see: UncorrGasGain_HVInitial2016 in 
 
 
 Running on a full run era will take time ( O(10h) ). 
@@ -63,4 +66,4 @@ root -l -b
 ProduceHistosPerChannel d
 d.Loop("TOTALME21HV1") //No ".root" extension 
 
-The resulting output file ("outfTOTME21HV1.root") will then contain histograms with all fits, as well as the slope distribution for each variable studied in a single histogram. 
+The resulting output file will then contain histograms with all fits, as well as the slope distribution for each variable studied in a single histogram. 

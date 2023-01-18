@@ -31,6 +31,7 @@ public :
    Int_t           _rhid;
    Int_t           _stationring;
    Double_t        _rhsumQ;
+   Double_t        _rhsumQ_RAW;
 
    Double_t        _pressure;
    Double_t        _temperature;
@@ -47,6 +48,7 @@ public :
    TBranch        *b__rhid;   //!
    TBranch        *b__stationring;   //!
    TBranch        *b__rhsumQ;   //!
+   TBranch        *b__rhsumQ_RAW;   //!
    TBranch        *b__pressure;   //!
    TBranch        *b__temperature;   //!
    TBranch        *b__instlumi;   //!
@@ -55,6 +57,8 @@ public :
    TBranch        *b__n_PV;   //!
    TBranch        *b__bunchcrossing;   //!
 
+
+	 TDirectory *dir_var_name;
    ProduceHistosPerChannel(TTree *tree=0);
    virtual ~ProduceHistosPerChannel();
    virtual Int_t    Cut(Long64_t entry);
@@ -67,10 +71,14 @@ public :
    virtual vector <std::pair<double,double > >  GetSlope( TH3D * myh , TString thevar , TString filename, TString title, TFile * outf);
 
    double ApplyCorrection( double pressure ,TString correctiontype, double p0, double p1 );
-   virtual void  Loop(TString detregionstr ="" );
+   virtual void  Loop(TString detregionstr ="", TString chamber_string = "" );
    
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+
+	  TString chamber_string_name; 
+    TString output_path = "/cmsuf/data/store/user/t2/users/neha.rawal/CSC_2017_data_RAW_RECO/nTuple_output/2017/output_ntuples/";
+
 };
 
 #endif
@@ -130,18 +138,19 @@ void ProduceHistosPerChannel::Init(TTree *tree)
    fChain->SetBranchAddress("_rhid", &_rhid, &b__rhid);
    fChain->SetBranchAddress("_stationring", &_stationring, &b__stationring);
    fChain->SetBranchAddress("_rhsumQ", &_rhsumQ, &b__rhsumQ);
+   fChain->SetBranchAddress("_rhsumQ_RAW", &_rhsumQ_RAW, &b__rhsumQ_RAW);
    fChain->SetBranchAddress("_pressure", &_pressure, &b__pressure);
    fChain->SetBranchAddress("_temperature", &_temperature, &b__temperature);
    fChain->SetBranchAddress("_instlumi", &_instlumi, &b__instlumi);
    fChain->SetBranchAddress("_integratelumi", &_integratelumi, &b__integratelumi);
    fChain->SetBranchAddress("_timesecond", &_timesecond, &b__timesecond);
-   fChain->SetBranchAddress("_n_PV", &_n_PV, &b__n_PV);
+//   fChain->SetBranchAddress("_n_PV", &_n_PV, &b__n_PV);
    fChain->SetBranchAddress("_bunchcrossing", &_bunchcrossing, &b__bunchcrossing);
 
    fChain->SetBranchStatus("_temperature",0);
    fChain->SetBranchStatus("_lumiBlock",0);
    fChain->SetBranchStatus("_eventNb",0);
-   fChain->SetBranchStatus("_n_PV",0);
+//   fChain->SetBranchStatus("_n_PV",0);
    fChain->SetBranchStatus("_bunchcrossing",0);
    fChain->SetBranchStatus("_timesecond",0);
 

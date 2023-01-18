@@ -11,7 +11,7 @@ cmsrel CMSSW_8_0_27
 cd CMSSW_8_0_27/src
 cmsenv 
 
-git clone https://github.com/lathomas/CSCAgeingP5  
+git clone git@github.com:neharawal14/CSCAgeing-studies.git
 
 In CSCAgeingP5/Work, edit the script_mysetup to define some global variables such as the folder you will be working on and the folder for outputs. 
 

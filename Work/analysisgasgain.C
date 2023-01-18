@@ -18,9 +18,9 @@ void analysisgasgain(Int_t fstat,Int_t fprint,string ntuplename,string histroot)
   
   HistMan *histos = new HistMan();
   AnalysisGasGain *anl=new AnalysisGasGain();
-  ntuplename.replace(ntuplename.begin(),ntuplename.begin()+9,"");
+ //ntuplename.replace(ntuplename.begin(),ntuplename.begin()+9,"");
   string prefix = "root://cmsio2.rc.ufl.edu/";
-  ntuplename = prefix+ntuplename;
+//  ntuplename = prefix+ntuplename;
   cout << ntuplename <<endl;
   anl->Setup(fstat,fprint,ntuplename,histroot);
   anl->Analyze(histos);

@@ -9,8 +9,8 @@
 #include "TLorentzVector.h"
 #include <limits>
 #include <map>
-#include "pressurecsc.h"
-
+#include "pressurecsc_2017.h"
+#include "IntegrateLumi_2017.h"
 #include "IntegrateLumi.h"
 
 #include "ChargeORIGandInstL.h"
@@ -42,6 +42,9 @@ std::map <Int_t, std::vector <Double_t> >
                             m_cscSegments_single_trk_recHitRecord_final;
 
 int minhitpersegment = 5;
+
+bool debug_program = true;
+bool debug_first = true ;
 AnalysisGasGain::AnalysisGasGain() { }
 
 AnalysisGasGain::~AnalysisGasGain() { }
@@ -149,7 +152,7 @@ void AnalysisGasGain::Setup(Int_t fstat,Int_t fprint,string inp,string out)
   outputtree[i]->Branch("_instlumi",&_instlumi,"_instlumi/D");
   outputtree[i]->Branch("_integratelumi",&_integratelumi,"_integratelumi/D");
   outputtree[i]->Branch("_timesecond",&_timesecond,"_timesecond/i") ;
-  outputtree[i]->Branch("_n_PV",&_n_PV,"_n_PV/I");
+//  outputtree[i]->Branch("_n_PV",&_n_PV,"_n_PV/I");
   outputtree[i]->Branch("_bunchcrossing",&_bunchcrossing,"_bunchcrossing/I");
 
 
@@ -169,6 +172,7 @@ void AnalysisGasGain::SetupPrint() {
   cout<<" "<<endl;
   cout<<ntuplename.c_str()<<endl;
   cout<<histrootname.c_str()<<endl;
+   if(debug_first) std::cout<<" name of the chamber finally got the hits  "<<histrootname.c_str()<<std::endl;
   cout<<"flag_stat flag_print "<<flag_stat<<" "<<flag_print<<endl;
   cout<<""<<endl;
 }
@@ -668,7 +672,7 @@ ostringstream ss;
 	      ", "<<  (unsigned long)fvertex_nVertex<<
 	      ", "<<  (long)fvertex_nVertex<<
 	      endl;// ", "<<_n_PV <<endl;*/
-	    _n_PV = fvertex_nVertex;
+//	    _n_PV = fvertex_nVertex;
 
 	    _rhsumQ_RAW = sumq;
 	    std::pair<double,double>  gasgainandhv = UncorrGasGain_HVInitial2016(sumq,fRun,_stationring,_rhid);
@@ -698,7 +702,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
   TFile *histrootfile = new TFile(histrootname.c_str(), "RECREATE");
   TFile *f =  TFile::Open(ntuplename.c_str());
-
+  if(debug_first) std::cout<<" name of the chamber in start "<<histrootname.c_str()<<std::endl;
   TTree *tree = (TTree*)f->Get("cscRootMaker/Events");
   nentries = tree->GetEntries();
   cout<<"Total entries       "<<nentries<<endl;
@@ -706,10 +710,12 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   cout<<"Entries to read in  "<<nentries<<endl;
   cout<<endl;
 
+	if(debug_program) std::cout<<"branches to be declared"<<std::endl;
   // Get branches
   TBranch *b_Run=tree->GetBranch("Run");
+	if(debug_program) std::cout<<"first branch declared"<<std::endl;
   TBranch *b_LumiSect=tree->GetBranch("LumiSect");
-  TBranch *b_vertex_nVertex=tree->GetBranch("vertex_nVertex");
+//  TBranch *b_vertex_nVertex=tree->GetBranch("vertex_nVertex");
   TBranch *b_Event=tree->GetBranch("Event");
   TBranch *b_timeSecond=tree->GetBranch("timeSecond");
   TBranch *b_BunchCrossing=tree->GetBranch("BunchCrossing");
@@ -748,12 +754,16 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   TBranch *b_muons_dxy=tree->GetBranch("muons_dxy");
   TBranch *b_muons_isoCH03=tree->GetBranch("muons_isoCH03");
 
+	if(debug_program) std::cout<<"all branch declared"<<std::endl;
   // Set addresses
+	if(debug_program) std::cout<<"set addresses for branch "<<std::endl;
   b_Run->SetAddress(&fRun);
+	if(debug_program) std::cout<<"set addresses for first  branch "<<std::endl;
   b_Event->SetAddress(&fEvent);
+	if(debug_program) std::cout<<"set addresses for second  branch "<<std::endl;
   b_LumiSect->SetAddress(&fLumiSect);
   b_timeSecond->SetAddress(&ftimeSecond);
-  b_vertex_nVertex->SetAddress(&fvertex_nVertex);
+//  b_vertex_nVertex->SetAddress(&fvertex_nVertex);
   
   b_recHits2D_nRecHits2D->SetAddress(&frecHits2D_nRecHits2D);
   b_recHits2D_ID_endcap->SetAddress(frecHits2D_ID_endcap); // no & for array
@@ -788,6 +798,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   b_muons_dz->SetAddress(fmuons_dz);
   b_muons_dxy->SetAddress(fmuons_dxy);
   b_muons_isoCH03->SetAddress(fmuons_isoCH03);
+	if(debug_program) std::cout<<"setted addresses for all the  branch "<<std::endl;
   fcscSegments_recHitRecord_endcap  = 0; 
   fcscSegments_recHitRecord_station = 0; 
   fcscSegments_recHitRecord_ring    = 0;  
@@ -812,17 +823,21 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
   ULong64_t runnb_previous_event(0),  lumis_previous_event(0);
 
-
+  //if(debug_program)  std::cout<<"entering entry loop "<<std::endl;
+    std::cout<<"entering entry loop "<<std::endl;
   for(Int_t ient=0;ient<nentries;ient++) {
-
+   
+  //if(debug_program)  std::cout<<"time to load a entry"<<std::endl;
+//    std::cout<<"time to load a entry"<<std::endl;
      b_Run->GetEntry(ient);
      b_Event->GetEntry(ient);
      b_LumiSect->GetEntry(ient);
      b_timeSecond->GetEntry(ient);
      
-     b_vertex_nVertex->GetEntry(ient);
+//     b_vertex_nVertex->GetEntry(ient);
      b_BunchCrossing->GetEntry(ient);
 
+  if(debug_program)  std::cout<<"loaded few of the branches"<<std::endl;
      
      b_recHits2D_nRecHits2D->GetEntry(ient);
      b_recHits2D_ID_endcap->GetEntry(ient);
@@ -834,6 +849,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      b_recHits2D_localY->GetEntry(ient);
      b_recHits2D_SumQ->GetEntry(ient);
      
+  if(debug_program)  std::cout<<"loaded few more of the branches"<<std::endl;
      b_cscSegments_recHitRecord_endcap->GetEntry(ient);
      b_cscSegments_recHitRecord_station->GetEntry(ient);
      b_cscSegments_recHitRecord_ring->GetEntry(ient);
@@ -870,10 +886,11 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      m_cscSegments_single_trk_recHitRecord.clear();
      m_cscSegments_single_trk_recHitRecord_final.clear();
 
-     _pressure = getpressure(ftimeSecond);
+     _pressure = getpressure2017(ftimeSecond);
      _temperature =0;
      
 
+  if(debug_program)  std::cout<<"loading of branches done`"<<std::endl;
 
 
      for( int iM = 0; iM< fmuons_nMuons;iM++) {fmuons_Zcand[iM] = false; fmuons_isomuondzdxy[iM] = false;}
@@ -881,8 +898,12 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      passZmumusel= false;
      bool passisomuondzdxy = false;
      double mass =-1;
-     for( int iM = 0; iM<  fmuons_nMuons;iM++){
 
+		 // These conditions for one run are just sanity checks
+//		 if(fRun == 302448) {std::cout<<" the runs we started processing "<<fRun<<std::endl; }
+//		 if(fRun != 302448) {continue; }
+     for( int iM = 0; iM<  fmuons_nMuons;iM++){
+       if(debug_program) std::cout<<"entered the loop for checking each muon entry"<<std::endl;
        if(  fmuons_pt[iM]<10) continue;
        if(fabs(fmuons_dz[iM]) >0.2) continue;
        if(fabs(fmuons_dxy[iM]) >0.2) continue;
@@ -891,7 +912,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
        passisomuondzdxy =true;
        TLorentzVector mu1; 
        for( int jM= iM+1; jM<  fmuons_nMuons ;jM++){
-	 if(  fmuons_pt[jM]<10) continue;
+	 if(fmuons_pt[jM]<10) continue;
 	 if(fabs(fmuons_dz[jM]) >0.2) continue;
 	 if(fabs(fmuons_dxy[jM]) >0.2) continue;
 	 if(fabs(fmuons_isoCH03[jM]) >2) continue;
@@ -910,11 +931,22 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      }
 
      if(!passZmumusel&& !passisomuondzdxy) continue;
+
+//		 if(fRun == 302448 ) {std::cout<<" these runs  started processing and done "<<fRun<<std::endl; }
+
+  //    if(fRun != 302042 && fRun!= 302043 && fRun != 302131 && fRun != 302159 && fRun != 302163 && fRun != 302165 && fRun != 302166 &&  fRun != 302225 && fRun != 302228) continue;    
+     //if(fRun != 302229 && fRun!= 302240 && fRun != 302262 && fRun != 302263) continue;    
+		 
+     // if(fRun != 302277 && fRun!= 302279 && fRun != 302280 && fRun != 302322 && fRun != 302328 && fRun != 302337 && fRun != 302342 &&  fRun != 302343 && fRun != 302344 && fRun!=302350) continue;    
+    //if(fRun != 302388 && fRun!= 302392 && fRun != 302393 && fRun != 302448 ) continue;    
+    //if(fRun != 302388) continue;    
+
      if(runnb_previous_event != fRun ||   lumis_previous_event !=  fLumiSect)   _instlumi =instlumi(fRun, fLumiSect) ;
      
-     if(runnb_previous_event != fRun ) _integratelumi = integlumi2016(fRun);
+     if(runnb_previous_event != fRun ) _integratelumi = integlumi2017(fRun);
      
-     
+
+     //std::cout<<" going for that lumi 17.5-18 again  "<<fRun<<std::endl; 
      runnb_previous_event =fRun; 
      lumis_previous_event =  fLumiSect ;
      

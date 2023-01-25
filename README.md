@@ -9,9 +9,11 @@ cmsrel CMSSW_12_4_6
 cd CMSSW_12_4_6/src
 cmsenv 
 ```
+
 ### Clone the repository and setup your development branch
 ```
-git add remote origin  git@github.com:neharawal14/CSCAgeing-studies.git
+git init
+git remote add origin git@github.com:neharawal14/CSCAgeing-studies.git
 ```
 
 #### checkout the development branch (ageing_dev2022)

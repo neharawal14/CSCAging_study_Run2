@@ -27,19 +27,21 @@ git checkout origin/ageing_dev2022
 git checkout -b your_dev_branch
 ```
 
+#### (Instead of adding as remote if you like to clone use (git clone) just at the end fetch origin, and then checkout the ageing_dev2022)
+
+
 # Start analyzing 
 We will use our produced ntuples as the input file and process them further to get final ntuples
 
 The code itself is in the class AnalysisGasGain. 
 Before to run the script, compile and link the HistMan and AnalysisGasGain code (if you made changes in it or run it first time) by corresponding macros build_histman.C and build_analysisgasgain.C (being in folder Src):
 ```
+cd Src
 root -b -q  build_histman.C
+root -b -q build_analysisgasgain.C
 ```
  // to compile and link histogram manager HistMan
 
-```
-root -b -q build_analysisgasgain.C
-```
  // to compile and link AnalysisGasGain (this takes a few minutes)
 
 You can then test the code by running on a single file: 

@@ -9,7 +9,7 @@ cmsrel CMSSW_12_4_6
 cd CMSSW_12_4_6/src
 cmsenv 
 ```
-### Clone the repository 
+### Clone the repository and setup your development branch
 ```
 git add remote origin  git@github.com:neharawal14/CSCAgeing-studies.git
 ```
@@ -24,10 +24,9 @@ git checkout origin/ageing_dev2022
 git checkout -b your_dev_branch
 ```
 
-## Start analyzing 
+# Start analyzing 
 We will use our produced ntuples as the input file and process them further to get final ntuples
 
-3. Code
 The code itself is in the class AnalysisGasGain. 
 Before to run the script, compile and link the HistMan and AnalysisGasGain code (if you made changes in it or run it first time) by corresponding macros build_histman.C and build_analysisgasgain.C (being in folder Src):
 ```
@@ -56,7 +55,8 @@ _rhsumQ: ADC charge, undoing the HV changes made in the latest data
 
 (By running the above code, or the same code in the script "single_file_2022.sh" we get final 32 output files, one for each HV segment)
 .
-4. Extracting Gas gain dependency. 
+
+# Extracting Gas gain dependency. 
 This is done with a C++ class ( ProduceHistosPerChannel) 
 Assuming you have the file final_ME21HV1.root in the subfolder Work, do: 
 ```

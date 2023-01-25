@@ -9,9 +9,8 @@
 #include "TLorentzVector.h"
 #include <limits>
 #include <map>
-#include "pressurecsc_2017.h"
-#include "IntegrateLumi_2017.h"
-#include "IntegrateLumi.h"
+#include "pressurecsc_2022.h"
+#include "IntegrateLumi_2022.h"
 
 #include "ChargeORIGandInstL.h"
 ClassImp(AnalysisGasGain)
@@ -43,8 +42,8 @@ std::map <Int_t, std::vector <Double_t> >
 
 int minhitpersegment = 5;
 
-bool debug_program = true;
-bool debug_first = true ;
+bool debug_program = false;
+bool debug_first = false ;
 AnalysisGasGain::AnalysisGasGain() { }
 
 AnalysisGasGain::~AnalysisGasGain() { }
@@ -886,7 +885,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      m_cscSegments_single_trk_recHitRecord.clear();
      m_cscSegments_single_trk_recHitRecord_final.clear();
 
-     _pressure = getpressure2017(ftimeSecond);
+     _pressure = getpressure2022(ftimeSecond);
      _temperature =0;
      
 
@@ -943,7 +942,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
      if(runnb_previous_event != fRun ||   lumis_previous_event !=  fLumiSect)   _instlumi =instlumi(fRun, fLumiSect) ;
      
-     if(runnb_previous_event != fRun ) _integratelumi = integlumi2017(fRun);
+     if(runnb_previous_event != fRun ) _integratelumi = integlumi2022(fRun);
      
 
      //std::cout<<" going for that lumi 17.5-18 again  "<<fRun<<std::endl; 

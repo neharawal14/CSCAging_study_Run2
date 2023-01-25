@@ -14,7 +14,7 @@ double instlumi(int runnb= 284029, int lumis= 100){
   TString runnb_tstr = (TString) Form("%d",runnb);
   TString ls_tstr = (TString)Form("%d",lumis);
  
-  TString tstrtest = "../files_HVandLumi/InstLumiPerRun/2017/"+runnb_tstr+".csv";
+  TString tstrtest = "../files_HVandLumi/InstLumiPerRun/2022/"+runnb_tstr+".csv";
   ifstream lumifile;
   lumifile.open(tstrtest.Data());
   string value;

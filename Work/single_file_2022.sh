@@ -1,1 +1,0 @@
-root -l -b -q ../Src/HistMan_cxx.so ../Src/AnalysisGasGain_cxx.so analysisgasgain.C\(0,0,\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/input_ntuples/2022C/csc_dataset_2022C.root\",\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/output_ntuples/2022/csc_output_dataset_2022C.root\"\) 

@@ -42,6 +42,8 @@ std::map <Int_t, std::vector <Double_t> >
 
 int minhitpersegment = 5;
 
+bool debug_bool = true;
+bool debug_bool_region = true;
 bool debug_program = false;
 bool debug_first = false ;
 AnalysisGasGain::AnalysisGasGain() { }
@@ -56,7 +58,7 @@ void AnalysisGasGain::Setup(Int_t fstat,Int_t fprint,string inp,string out)
   flag_print=fprint;
   ntuplename=inp;
   histrootname=out;
-
+ if(debug_bool) std::cout<<"starting setup"<<std::endl;
   Int_t strng[10]={11,12,13,14,21,22,31,32,41,42};
   m_ordstatring.clear();
   for(Int_t i=0;i<10;i++) {
@@ -129,30 +131,39 @@ void AnalysisGasGain::Setup(Int_t fstat,Int_t fprint,string inp,string out)
  }
   // end of Y loc HV segment boundaries calculations
 
-  SetupPrint();
+		if(debug_bool) std::cout<<"Setup before  "<<std::endl;
+
+}
+
+void AnalysisGasGain::SetupTree(){
+  //this->SetupPrint();
   for(int i = 0; i <32;i++){
+		if(debug_bool) std::cout<<"creating trees for all the segments"<<std::endl;
     TString treename =GetRegionName(i);
-    TString filetreelocation = (TString) out;
+    TString filetreelocation = (TString) histrootname;
     filetreelocation.ReplaceAll(".root",treename+"_tree.root");
-    myoutfilefortree[i] = new TFile(filetreelocation,"recreate"); 
+    myoutfilefortree[i] = new TFile(filetreelocation,"RECREATE"); 
+		if(debug_bool) std::cout<<" trees created for all the segments"<<std::endl;
     
     outputtree[i] = new TTree("tree","tree");
-  outputtree[i]->Branch("_passZmumusel",   &passZmumusel,   "_passZmumusel/O");
-  outputtree[i]->Branch("_eventNb",   &_eventNb,   "_eventNb/l");
-  outputtree[i]->Branch("_runNb",   &_runNb,   "_runNb/l");
-  outputtree[i]->Branch("_lumiBlock",   &_lumiBlock,   "_lumiBlock/l");
+		if(debug_bool) std::cout<<" branches to be declared for all the segments"<<std::endl;
+    outputtree[i]->Branch("_passZmumusel",   &passZmumusel,   "_passZmumusel/O");
+		if(debug_bool) std::cout<<" rest of the branches to be declared for all the segments"<<std::endl;
+ // outputtree[i]->Branch("_eventNb",   &_eventNb,   "_eventNb/l");
+ // outputtree[i]->Branch("_runNb",   &_runNb,   "_runNb/l");
+  //outputtree[i]->Branch("_lumiBlock",   &_lumiBlock,   "_lumiBlock/l");
   outputtree[i]->Branch("_rhid",&_rhid,"_rhid/I");
-  outputtree[i]->Branch("_stationring",&_stationring,"_stationring/I");
+//  outputtree[i]->Branch("_stationring",&_stationring,"_stationring/I");
   outputtree[i]->Branch("_rhsumQ",&_rhsumQ,"_rhsumQ/D");
   outputtree[i]->Branch("_rhsumQ_RAW",&_rhsumQ_RAW,"_rhsumQ_RAW/D");
   outputtree[i]->Branch("_HV",&_HV,"_HV/D");
   outputtree[i]->Branch("_pressure",&_pressure,"_pressure/D");
-  outputtree[i]->Branch("_temperature",&_temperature,"_temperature/D");
+//  outputtree[i]->Branch("_temperature",&_temperature,"_temperature/D");
   outputtree[i]->Branch("_instlumi",&_instlumi,"_instlumi/D");
   outputtree[i]->Branch("_integratelumi",&_integratelumi,"_integratelumi/D");
-  outputtree[i]->Branch("_timesecond",&_timesecond,"_timesecond/i") ;
+//  outputtree[i]->Branch("_timesecond",&_timesecond,"_timesecond/i") ;
 //  outputtree[i]->Branch("_n_PV",&_n_PV,"_n_PV/I");
-  outputtree[i]->Branch("_bunchcrossing",&_bunchcrossing,"_bunchcrossing/I");
+ // outputtree[i]->Branch("_bunchcrossing",&_bunchcrossing,"_bunchcrossing/I");
 
 
 
@@ -160,8 +171,16 @@ void AnalysisGasGain::Setup(Int_t fstat,Int_t fprint,string inp,string out)
    outputtree[i]->Branch("_etamuon",&_etamuon,"_etamuon/D");
    outputtree[i]->Branch("_phimuon",&_phimuon,"_phimuon/D");
    outputtree[i]->Branch("_ptmuon",&_ptmuon,"_ptmuon/D");
+   
+	 outputtree[i]->Branch("z_pt",&z_pt,"z_pt/D");
+   outputtree[i]->Branch("z_eta",&z_eta,"z_eta/D");
+   outputtree[i]->Branch("z_phi",&z_phi,"z_phi/D");
+   outputtree[i]->Branch("z_mass",&z_mass,"z_mass/D");
 
-  }
+		if(debug_bool) std::cout<<" branches declared succesfully for all the segments"<<std::endl;
+		if(debug_bool) std::cout<<"Setup did perfeclty  "<<std::endl;
+}
+
 }
 
 /* *********************** SetupPrint ************************************* */
@@ -171,7 +190,6 @@ void AnalysisGasGain::SetupPrint() {
   cout<<" "<<endl;
   cout<<ntuplename.c_str()<<endl;
   cout<<histrootname.c_str()<<endl;
-   if(debug_first) std::cout<<" name of the chamber finally got the hits  "<<histrootname.c_str()<<std::endl;
   cout<<"flag_stat flag_print "<<flag_stat<<" "<<flag_print<<endl;
   cout<<""<<endl;
 }
@@ -232,12 +250,20 @@ Int_t  AnalysisGasGain::doHVsegment(Float_t yloc,Int_t stn,Int_t rng,Int_t layer
 void AnalysisGasGain::Analyze(HistMan *histos) {
 
   CycleTree(histos);
+	if(debug_bool) std::cout<<"eror in clearing hist maps"<<std::endl;
   histos->ClearHistMaps();
+	//  myoutfilefortree[0]->Close();
   for(int i = 0; i<32;i++){
+	if(debug_bool) std::cout<<"issue when we try to enter individual trees "<<std::endl;
   myoutfilefortree[i]->cd();
+	if(debug_bool) std::cout<<"issue when we try to fill individual trees "<<std::endl;
   outputtree[i]->Write();
+	if(debug_bool) std::cout<<"issue when we try to close individual trees "<<std::endl;
   myoutfilefortree[i]->Close();
+
   }
+	
+	if(debug_bool) std::cout<<"output will be there  "<<std::endl;
 }
 
 /* *******************    GetME14RecHits ********************************** */
@@ -258,10 +284,10 @@ for(Int_t irechit=0;irechit<frecHits2D_nRecHits2D;irechit++) {
       
      if(m_nRecHitlayer.find(key_layer)== m_nRecHitlayer.end())
        m_nRecHitlayer[key_layer]=0;
-     m_nRecHitlayer[key_layer]= m_nRecHitlayer[key_layer]+1;
+       m_nRecHitlayer[key_layer]= m_nRecHitlayer[key_layer]+1;
      if(m_nRecHitchamber.find(key_chmb)== m_nRecHitchamber.end())
        m_nRecHitchamber[key_chmb]=0;
-     m_nRecHitchamber[key_chmb]= m_nRecHitchamber[key_chmb]+1;
+       m_nRecHitchamber[key_chmb]= m_nRecHitchamber[key_chmb]+1;
      
      if(station==1 && ring==4 && sumq > 0.0) { //ME14
        if(m_nRecHitlayerME14.find(key_layer)== m_nRecHitlayerME14.end())
@@ -421,6 +447,7 @@ void AnalysisGasGain::GetSegments(HistMan* histos) {
 /* ***********************  GetTracks ********************************* */
 
 void AnalysisGasGain::GetTracks(HistMan* histos) {
+	   if(debug_bool) std::cout<<" inside Get Tracks "<<std::endl;
      ostringstream ss;
      if(m_Single_cscSegments_recHitRecordX.size() > 0) {//There should be at least one single segment in a chamber
 
@@ -509,6 +536,8 @@ void AnalysisGasGain::GetTracks(HistMan* histos) {
                      histos->fill2DHist(dy,y_aver,ss.str().c_str(),"","dy, cm","Yloc, cm","COLZ",25,0.0,0.25,75,-150.0,150.0,1.0,"Test");
 	           if(statrng==31 || statrng==32 || statrng==41 || statrng==42)
 		     histos->fill2DHist(dy,y_aver,ss.str().c_str(),"","dy, cm","Yloc, cm","COLZ",25,-0.25,0.0,75,-150.0,150.0,1.0,"Test");
+
+
 		   }
 		 } // end of if(nhit==6)
 	       } // end of if(nhit==(Int_t)nlayers)
@@ -525,12 +554,14 @@ void AnalysisGasGain::GetTracks(HistMan* histos) {
      if(m_muon_segm.size() > 0) histos->fill1DHist((Float_t)m_muon_segm.size(),"single_segm_tracks_per_event","","# of single track_segments per event","Entires",4,20,0.0,20.0,1.0,"Test");
      } // end of if single muon track per event (trackne==1)
      } // end of    if(m_Single_cscSegments_recHitRecordX.size() > 0) 
+	   if(debug_bool) std::cout<<" ending Get Tracks "<<std::endl;
 }
 
 /* *******************  GetRecHitsSumQ ********************************* */
 
 void AnalysisGasGain::GetRecHitsSumQ(HistMan* histos) {
 
+	   if(debug_bool) std::cout<<" to collect charges : event "<<_eventNb<<std::endl;
      if(m_cscSegments_single_trk_recHitRecord.size() > 0) {
        for(Int_t irechit=0;irechit<frecHits2D_nRecHits2D;irechit++) {
           Int_t ring=frecHits2D_ID_ring[irechit];
@@ -577,6 +608,7 @@ void AnalysisGasGain::GetRecHitsSumQ(HistMan* histos) {
 	  cout<<"Warning, different sizes "<<m_cscSegments_single_trk_recHitRecord.size()<<" "<<m_cscSegments_single_trk_recHitRecord_final.size()<<" "<<fEvent<<endl;
 	// histos->fill1DHist((Float_t)m_cscSegments_single_trk_recHitRecord_final.size(),"final_used_rechits_no_ME14_per_event","","Number of used rechits(no ME14) per event","Entries",4,100,0.0,100.0,1.0,"Test");    //laurent: I commented this line:
 
+	   if(debug_bool) std::cout<<" finished collect charges "<<std::endl;
      } // end of if(m_cscSegments_single_trk_recHitRecord.size() > 0)
 }
 
@@ -680,9 +712,11 @@ ostringstream ss;
 	    _HV =  gasgainandhv.second;
 
 	    int iregion = GetRegionIdx(station,ring,hvsgm);
+			if(debug_bool_region)std::cout<<" value of the region in each rechit "<<iregion<<" charge "<<_rhsumQ<<" event Nb"<<_eventNb<<" hv segment "<<hvsgm<<std::endl;
 	    if(iregion >=0)  outputtree[iregion]->Fill();
 	    else cout <<"region not found! " <<endl;
 	    
+	   if(debug_bool) std::cout<<" found the region and filled variables : run : event "<<_runNb<<" "<<_eventNb<<std::endl;
 
 	  } // end if (hvsgm > 0)
        } // end of   for(map<Int_t, std::vector <Double_t> >::iterator It=m_cscSegments_single_trk_recHitRecord_final.begin()
@@ -701,7 +735,9 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
   TFile *histrootfile = new TFile(histrootname.c_str(), "RECREATE");
   TFile *f =  TFile::Open(ntuplename.c_str());
-  if(debug_first) std::cout<<" name of the chamber in start "<<histrootname.c_str()<<std::endl;
+  if(debug_bool) {std::cout<<" name of the chamber in start "<<histrootname.c_str()<<std::endl;
+   std::cout<<" opened the root file and making tree "<<std::endl;
+	}
   TTree *tree = (TTree*)f->Get("cscRootMaker/Events");
   nentries = tree->GetEntries();
   cout<<"Total entries       "<<nentries<<endl;
@@ -709,7 +745,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   cout<<"Entries to read in  "<<nentries<<endl;
   cout<<endl;
 
-	if(debug_program) std::cout<<"branches to be declared"<<std::endl;
+	if(debug_bool) std::cout<<"branches to be declared"<<std::endl;
   // Get branches
   TBranch *b_Run=tree->GetBranch("Run");
 	if(debug_program) std::cout<<"first branch declared"<<std::endl;
@@ -753,13 +789,10 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   TBranch *b_muons_dxy=tree->GetBranch("muons_dxy");
   TBranch *b_muons_isoCH03=tree->GetBranch("muons_isoCH03");
 
-	if(debug_program) std::cout<<"all branch declared"<<std::endl;
+	if(debug_bool) std::cout<<"all branch declared"<<std::endl;
   // Set addresses
-	if(debug_program) std::cout<<"set addresses for branch "<<std::endl;
   b_Run->SetAddress(&fRun);
-	if(debug_program) std::cout<<"set addresses for first  branch "<<std::endl;
   b_Event->SetAddress(&fEvent);
-	if(debug_program) std::cout<<"set addresses for second  branch "<<std::endl;
   b_LumiSect->SetAddress(&fLumiSect);
   b_timeSecond->SetAddress(&ftimeSecond);
 //  b_vertex_nVertex->SetAddress(&fvertex_nVertex);
@@ -797,7 +830,7 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   b_muons_dz->SetAddress(fmuons_dz);
   b_muons_dxy->SetAddress(fmuons_dxy);
   b_muons_isoCH03->SetAddress(fmuons_isoCH03);
-	if(debug_program) std::cout<<"setted addresses for all the  branch "<<std::endl;
+	if(debug_bool) std::cout<<"setted addresses for all the  branch "<<std::endl;
   fcscSegments_recHitRecord_endcap  = 0; 
   fcscSegments_recHitRecord_station = 0; 
   fcscSegments_recHitRecord_ring    = 0;  
@@ -824,8 +857,10 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
   //if(debug_program)  std::cout<<"entering entry loop "<<std::endl;
     std::cout<<"entering entry loop "<<std::endl;
-  for(Int_t ient=0;ient<nentries;ient++) {
+  //for(Int_t ient=0;ient<nentries;ient++) {
+  for(Int_t ient=0;ient<100;ient++) {
    
+    std::cout<<" entry number "<<ient<<std::endl;
   //if(debug_program)  std::cout<<"time to load a entry"<<std::endl;
 //    std::cout<<"time to load a entry"<<std::endl;
      b_Run->GetEntry(ient);
@@ -836,8 +871,6 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 //     b_vertex_nVertex->GetEntry(ient);
      b_BunchCrossing->GetEntry(ient);
 
-  if(debug_program)  std::cout<<"loaded few of the branches"<<std::endl;
-     
      b_recHits2D_nRecHits2D->GetEntry(ient);
      b_recHits2D_ID_endcap->GetEntry(ient);
      b_recHits2D_ID_station->GetEntry(ient);
@@ -889,20 +922,18 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      _temperature =0;
      
 
-  if(debug_program)  std::cout<<"loading of branches done`"<<std::endl;
+  if(debug_bool)  std::cout<<"loading of branches done`"<<std::endl;
 
 
-     for( int iM = 0; iM< fmuons_nMuons;iM++) {fmuons_Zcand[iM] = false; fmuons_isomuondzdxy[iM] = false;}
+     for( int iM = 0; iM< fmuons_nMuons;iM++) {
+			 fmuons_Zcand[iM] = false; fmuons_isomuondzdxy[iM] = false;}
      //Skim: 2 muons pt 10, 70<M(mumu)<110
      passZmumusel= false;
      bool passisomuondzdxy = false;
      double mass =-1;
 
-		 // These conditions for one run are just sanity checks
-//		 if(fRun == 302448) {std::cout<<" the runs we started processing "<<fRun<<std::endl; }
-//		 if(fRun != 302448) {continue; }
-     for( int iM = 0; iM<  fmuons_nMuons;iM++){
-       if(debug_program) std::cout<<"entered the loop for checking each muon entry"<<std::endl;
+       if(debug_bool) std::cout<<"enteing the loop for checking each muon entry"<<std::endl;
+      for( int iM = 0; iM<  fmuons_nMuons;iM++){
        if(  fmuons_pt[iM]<10) continue;
        if(fabs(fmuons_dz[iM]) >0.2) continue;
        if(fabs(fmuons_dxy[iM]) >0.2) continue;
@@ -926,6 +957,11 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 	   fmuons_Zcand[iM]=true; 
 	   fmuons_Zcand[jM]=true; 
 	 }
+
+	 z_pt = (mu1+mu2).Pt();
+	 z_eta = (mu1+mu2).Eta();
+	 z_phi = (mu1+mu2).Phi();
+	 z_mass = (mu1+mu2).Mag();
        }
      }
 
@@ -944,8 +980,8 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      
      if(runnb_previous_event != fRun ) _integratelumi = integlumi2022(fRun);
      
-
-     //std::cout<<" going for that lumi 17.5-18 again  "<<fRun<<std::endl; 
+     
+     if(debug_bool) std::cout<<" going for the event   "<<fRun<<std::endl; 
      runnb_previous_event =fRun; 
      lumis_previous_event =  fLumiSect ;
      
@@ -1023,9 +1059,12 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      //**********************************************************************
 
      //     AddME14RecHits(); Commented out Laurent
-
+     if(debug_bool) std::cout<<"collected charges and going further "<<std::endl;
+		 if(debug_bool) std::cout<<" single trk size "<<m_cscSegments_single_trk_recHitRecord_final.size()<<std::endl;
       if(m_cscSegments_single_trk_recHitRecord_final.size() > 0) {
-        histos->fill1DHist((Float_t)m_cscSegments_single_trk_recHitRecord_final.size(),"final_used_rechits_per_event","","Number of used rechits per event","Entries",4,100,0.0,100.0,1.0,"Test");
+         if(debug_bool) std::cout<<"entered here in single track  "<<std::endl;				
+         histos->fill1DHist((Float_t)m_cscSegments_single_trk_recHitRecord_final.size(),"final_used_rechits_per_event","","Number of used rechits per event","Entries",4,100,0.0,100.0,1.0,"Test");
+         if(debug_bool) std::cout<<"filled the single track histogram  "<<std::endl;				
          m_Run_usedevents[key_run]=m_Run_usedevents[key_run]+1;
          m_Run_usedhits[key_run]=m_Run_usedhits[key_run]+(Int_t)m_cscSegments_single_trk_recHitRecord_final.size();
       }
@@ -1035,20 +1074,24 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
      // histograms in HV segments
      //**********************************************************************
 
+		 if(debug_bool) std::cout<<" histogram in HV segemnts "<<std::endl;
      if(m_cscSegments_single_trk_recHitRecord_final.size() > 0) 
+      if(debug_bool) std::cout<<"filling histos now : entry "<<_eventNb<<std::endl;
+		 if(debug_bool_region) std::cout<<"event is there and filling the charge now"<<std::endl;
         FillSumQHists(histos); 
 
 
      } // end of if(recsegtrk==7)
   } // end of  for(Int_t ient=0;
-
+ 
+  if(debug_bool) std::cout<<"end of entry loop and reseting tree branches now : entry "<<_eventNb<<std::endl;
   tree->ResetBranchAddresses();
 
   //************************************************************************
   // End of tree analysis printout
   //**************************************************************************
 
-  cout<<endl;
+  cout<<" going to print out tree details"<<std::endl;
   Int_t cnt=0,cnt_readin=0,cnt_used=0,cnt_usedhits=0;
   for(std::map<Int_t,Int_t>::iterator It=m_RunEvent.begin(); It!= m_RunEvent.end();++It) {
      Int_t key=(*It).first;
@@ -1069,8 +1112,13 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
   // were stored in f directory
   //************************************************************************
 
+
   histos->writeHists(histrootfile);
+	
+  if(debug_bool) std::cout<<" before closing the histogram and after writing the histogram "<<endl;
   histrootfile->Close();
+
+  if(debug_bool) std::cout<<" issue in closing  "<<endl;
   f->Close();
 }
 

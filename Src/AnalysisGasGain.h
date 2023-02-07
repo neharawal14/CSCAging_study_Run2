@@ -51,15 +51,15 @@ private:
   std::vector< std::vector<Double_t> > *fmuons_cscSegmentRecord_localX;
 
   Int_t fmuons_nMuons;  
-  Double_t fmuons_pt[100] ; 
-  Double_t fmuons_eta[100] ; 
-  Double_t fmuons_phi[100] ; 
+  Double_t fmuons_pt[200] ; 
+  Double_t fmuons_eta[200] ; 
+  Double_t fmuons_phi[200] ; 
 
-  Double_t fmuons_dz[100] ; 
-  Double_t fmuons_dxy[100] ; 
-  Double_t fmuons_isoCH03[100] ; 
-  Bool_t fmuons_Zcand[100];
-  Bool_t fmuons_isomuondzdxy[100];
+  Double_t fmuons_dz[200] ; 
+  Double_t fmuons_dxy[200] ; 
+  Double_t fmuons_isoCH03[200] ; 
+  Bool_t fmuons_Zcand[200];
+  Bool_t fmuons_isomuondzdxy[200];
 
   // Yloc boundaries of HV segments in CSC layers
   // Low and High Y local coordinates (cm) of the segments
@@ -69,8 +69,8 @@ private:
            me31YlocHVsgmLow[3],   me31YlocHVsgmHigh[3],
            me41YlocHVsgmLow[3],   me41YlocHVsgmHigh[3],
            me234_2YlocHVsgmLow[5],me234_2YlocHVsgmHigh[5];
-  TFile * myoutfilefortree[32] ;
-  TTree * outputtree[32]; //output tree 
+  TFile * myoutfilefortree[33] ;
+  TTree * outputtree[40]; //output tree 
   //Format is the following: 
   //treeME11a
   //treeME11b
@@ -120,6 +120,10 @@ private:
   double _ptmuon;
   double _etamuon;
   double _phimuon;
+	double z_pt;
+	double z_eta;
+	double z_phi;
+	double z_mass;
 
 public:
 
@@ -129,6 +133,7 @@ public:
   void Setup(Int_t,Int_t,string,string);
 
   void SetupPrint();
+  void SetupTree();
 
   Int_t doHVsegment(Float_t, Int_t, Int_t, Int_t);
 

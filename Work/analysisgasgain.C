@@ -23,6 +23,7 @@ void analysisgasgain(Int_t fstat,Int_t fprint,string ntuplename,string histroot)
 //  ntuplename = prefix+ntuplename;
   cout << ntuplename <<endl;
   anl->Setup(fstat,fprint,ntuplename,histroot);
+  anl->SetupTree();
   anl->Analyze(histos);
 
   delete anl;

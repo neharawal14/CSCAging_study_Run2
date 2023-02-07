@@ -149,21 +149,21 @@ void AnalysisGasGain::SetupTree(){
 		if(debug_bool) std::cout<<" branches to be declared for all the segments"<<std::endl;
     outputtree[i]->Branch("_passZmumusel",   &passZmumusel,   "_passZmumusel/O");
 		if(debug_bool) std::cout<<" rest of the branches to be declared for all the segments"<<std::endl;
- // outputtree[i]->Branch("_eventNb",   &_eventNb,   "_eventNb/l");
- // outputtree[i]->Branch("_runNb",   &_runNb,   "_runNb/l");
-  //outputtree[i]->Branch("_lumiBlock",   &_lumiBlock,   "_lumiBlock/l");
+  outputtree[i]->Branch("_eventNb",   &_eventNb,   "_eventNb/l");
+  outputtree[i]->Branch("_runNb",   &_runNb,   "_runNb/l");
+  outputtree[i]->Branch("_lumiBlock",   &_lumiBlock,   "_lumiBlock/l");
   outputtree[i]->Branch("_rhid",&_rhid,"_rhid/I");
-//  outputtree[i]->Branch("_stationring",&_stationring,"_stationring/I");
+  outputtree[i]->Branch("_stationring",&_stationring,"_stationring/I");
   outputtree[i]->Branch("_rhsumQ",&_rhsumQ,"_rhsumQ/D");
   outputtree[i]->Branch("_rhsumQ_RAW",&_rhsumQ_RAW,"_rhsumQ_RAW/D");
   outputtree[i]->Branch("_HV",&_HV,"_HV/D");
   outputtree[i]->Branch("_pressure",&_pressure,"_pressure/D");
-//  outputtree[i]->Branch("_temperature",&_temperature,"_temperature/D");
+  outputtree[i]->Branch("_temperature",&_temperature,"_temperature/D");
   outputtree[i]->Branch("_instlumi",&_instlumi,"_instlumi/D");
   outputtree[i]->Branch("_integratelumi",&_integratelumi,"_integratelumi/D");
-//  outputtree[i]->Branch("_timesecond",&_timesecond,"_timesecond/i") ;
-//  outputtree[i]->Branch("_n_PV",&_n_PV,"_n_PV/I");
- // outputtree[i]->Branch("_bunchcrossing",&_bunchcrossing,"_bunchcrossing/I");
+  outputtree[i]->Branch("_timesecond",&_timesecond,"_timesecond/i") ;
+  outputtree[i]->Branch("_n_PV",&_n_PV,"_n_PV/I");
+  outputtree[i]->Branch("_bunchcrossing",&_bunchcrossing,"_bunchcrossing/I");
 
 
 
@@ -252,7 +252,6 @@ void AnalysisGasGain::Analyze(HistMan *histos) {
   CycleTree(histos);
 	if(debug_bool) std::cout<<"eror in clearing hist maps"<<std::endl;
   histos->ClearHistMaps();
-	//  myoutfilefortree[0]->Close();
   for(int i = 0; i<32;i++){
 	if(debug_bool) std::cout<<"issue when we try to enter individual trees "<<std::endl;
   myoutfilefortree[i]->cd();
@@ -857,8 +856,8 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 
   //if(debug_program)  std::cout<<"entering entry loop "<<std::endl;
     std::cout<<"entering entry loop "<<std::endl;
-  //for(Int_t ient=0;ient<nentries;ient++) {
-  for(Int_t ient=0;ient<100;ient++) {
+for(Int_t ient=0;ient<nentries;ient++) {
+//  for(Int_t ient=0;ient<100;ient++) {
    
     std::cout<<" entry number "<<ient<<std::endl;
   //if(debug_program)  std::cout<<"time to load a entry"<<std::endl;

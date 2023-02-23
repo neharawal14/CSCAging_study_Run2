@@ -71,13 +71,15 @@ public :
    virtual vector <std::pair<double,double > >  GetSlope( TH3D * myh , TString thevar , TString filename, TString title, TFile * outf);
 
    double ApplyCorrection( double pressure ,TString correctiontype, double p0, double p1 );
-   virtual void  Loop(TString detregionstr ="", TString chamber_string = "" );
+   virtual void  Loop(TString , TString, TString, TString, TString);
    
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 
 	  TString chamber_string_name; 
-    TString output_path = "/cmsuf/data/store/user/t2/users/neha.rawal/CSC_2017_data_RAW_RECO/nTuple_output/2017/output_ntuples/";
+    TString output_path ;
+    TString output_plots_folder ; 
+		TString detregionstr;
 
 };
 

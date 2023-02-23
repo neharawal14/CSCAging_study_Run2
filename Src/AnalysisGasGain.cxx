@@ -42,8 +42,8 @@ std::map <Int_t, std::vector <Double_t> >
 
 int minhitpersegment = 5;
 
-bool debug_bool = true;
-bool debug_bool_region = true;
+bool debug_bool = false;
+bool debug_bool_region = false;
 bool debug_program = false;
 bool debug_first = false ;
 AnalysisGasGain::AnalysisGasGain() { }
@@ -859,7 +859,6 @@ void AnalysisGasGain::CycleTree(HistMan* histos) {
 for(Int_t ient=0;ient<nentries;ient++) {
 //  for(Int_t ient=0;ient<100;ient++) {
    
-    std::cout<<" entry number "<<ient<<std::endl;
   //if(debug_program)  std::cout<<"time to load a entry"<<std::endl;
 //    std::cout<<"time to load a entry"<<std::endl;
      b_Run->GetEntry(ient);

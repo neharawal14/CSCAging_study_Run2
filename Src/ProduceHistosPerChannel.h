@@ -13,6 +13,7 @@
 #include <TFile.h>
 #include <TH3.h>
 #include <TF1.h>
+#include <TGraphErrors.h>
 
 
 // Header file for the classes stored in the TTree if any.
@@ -81,6 +82,16 @@ public :
     TString output_plots_folder ; 
 		TString detregionstr;
 
+/*		std::vector<UInt_t> *time_vector=nullptr;
+		std::vector<double> *gas_gain_vector=nullptr;
+		std::vector<double> *gas_gain_error_vector=nullptr;
+*/
+		std::vector<UInt_t> time_vector;
+		std::vector<double> gas_gain_vector;
+		std::vector<double> gas_gain_error_vector;
+
+		void plot_gain_time();
+
 };
 
 #endif
@@ -118,6 +129,7 @@ Long64_t ProduceHistosPerChannel::LoadTree(Long64_t entry)
    return centry;
 }
 
+
 void ProduceHistosPerChannel::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
@@ -154,7 +166,7 @@ void ProduceHistosPerChannel::Init(TTree *tree)
    fChain->SetBranchStatus("_eventNb",0);
 //   fChain->SetBranchStatus("_n_PV",0);
    fChain->SetBranchStatus("_bunchcrossing",0);
-   fChain->SetBranchStatus("_timesecond",0);
+//   fChain->SetBranchStatus("_timesecond",0);
 
    Notify();
    

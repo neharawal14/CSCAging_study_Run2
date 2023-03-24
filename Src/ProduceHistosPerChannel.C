@@ -1,7 +1,7 @@
 #define ProduceHistosPerChannel_cxx
 #include <iostream>
 #include <stdio.h>
-
+#include<ctime>
 #include <fstream>
 #include <iomanip>
 #include <string>
@@ -25,8 +25,8 @@ enum ring_station_hvsegm {
 double trimmean =0.7;//Offset used in the calculation of the trimmed mean
 bool istest =false; //For tests, run only on 1/100 of the events
 bool debug_trimmed_plots = false;
-bool debug_statements =true;
-bool savehistos =false;
+bool debug_statements =false;
+bool savehistos =true;
 bool seconditer_plots =true;// If you want to perform a second iteration of the fit to pressure and inst L.
 bool seconditer =false;// If you want to perform a second iteration of the fit to pressure and inst L.
 
@@ -37,7 +37,7 @@ bool dropinstlumicorr =false; // Drop inst L correction
 bool droppressurecorr =false;// Drop pressure correction
 
 bool debug_print = false;
-bool timesecond_plot = true;
+bool timesecond_plot = false;
 bool iszmumu = false;//If only Zmumu events are used the corrections cannot be derived channel per channel (not enough stat) so we take all channels together
 TH3D * hchargevspressure_2, * hchargevsinstlumi_2;
 int thestationringhv (TString thename){
@@ -271,6 +271,7 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
 */
    //Run on all events to extract pressure correction for each channel (rechit) separately. 
    //This is done with the help of a 3d histogram, storing charge, pressure and local rechit ID (inside a given station/ring/HV chamber)
+
    TH3D * hchargevspressure = new TH3D("hchargevspressure","charge (ADC counts) vs pressure",150,0,3000, 40, 944,984  ,770,1,771);
 
    for(int i = 0; i < tree->GetEntries(); i++){
@@ -287,7 +288,11 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
 		 
 //		 cout<<"entering to inst lumi loop"<<endl;
      if(corrfrom25to36fbonly &&_instlumi>19000 ) continue;
-     if(corrfrom25to36fbonly &&_instlumi<10000) continue;
+     if(corrfrom25to36fbonly &&_instlumi<14000) continue;
+
+
+//		 if(corrfrom25to36fbonly &&_instlumi>19000 ) continue;
+//     if(corrfrom25to36fbonly &&_instlumi<10000) continue;
      if(check7to9e33only  &&_instlumi<8000 ) continue;
      if(check7to9e33only  &&_instlumi>14000 ) continue;
      
@@ -332,7 +337,9 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
 //     std::cout<<" pressure correction getting applied "<<std::endl;
      
      int idforcorr = (iszmumu )? 0: rhidreduced ;
-     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  ;
+     //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  ;
+		 // modifying the corections, so that the same correction applies to all channels, and that correction is derived from all good channels slope and that's why idforcorr = 0 for this case
+     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[0]).first , (params_pressure[0]).second )  ;
      hchargevsinstlumi->Fill( charge, _instlumi, rhidreduced);
  
 
@@ -369,13 +376,16 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
      if(badrun(_runNb) ) continue;
      if(corrfrom25to36fbonly &&_integratelumi>36 ) continue;
      if(corrfrom25to36fbonly &&_integratelumi<25) continue;
-     if(corrfrom25to36fbonly &&_instlumi<10000 ) continue;
+     if(corrfrom25to36fbonly &&_instlumi<14000 ) continue;
      if(corrfrom25to36fbonly &&_instlumi>19000) continue;
 
      int rhidreduced = ((int)floor(_rhid/10))%1000;
      if(_rhid> 2000000) rhidreduced +=400;
      int idforcorr = (iszmumu )? 0: rhidreduced ;
-     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second );
+     //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second );
+		 // modifying the corections, so that the same correction applies to all channels, and that correction is derived from all good channels slope and that's why idforcorr = 0 for this case
+     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[0]).first , (params_pressure[0]).second );
+
 	 //	 * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) ;
      //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) ;
      hchargevspressure_2->Fill(charge, _pressure , rhidreduced);
@@ -402,7 +412,9 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
      int rhidreduced = ((int)floor(_rhid/10))%1000;
      if(_rhid> 2000000) rhidreduced +=400;
      int idforcorr = (iszmumu )? 0: rhidreduced ;
-     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) * ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[idforcorr]).first , (params_pressure_2[idforcorr]).second )  ;
+     //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) * ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[idforcorr]).first , (params_pressure_2[idforcorr]).second )  ;
+		 // modifying the corections, so that the same correction applies to all channels, and that correction is derived from all good channels slope and that's why idforcorr = 0 for this case
+     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[0]).first , (params_pressure[0]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[0]).first , (params_instlumi[0]).second ) * ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[0]).first , (params_pressure_2[0]).second )  ;
      hchargevsinstlumi_2->Fill( charge, _instlumi, rhidreduced);
      
    }
@@ -436,13 +448,15 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
      int idforcorr = (iszmumu )? 0: rhidreduced ;
 
      //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) ;
-     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second );
+     //double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[idforcorr]).first , (params_pressure[idforcorr]).second );
+     double charge  = _rhsumQ_RAW* ApplyCorrection( _pressure ,"pressure",   (params_pressure[0]).first , (params_pressure[0]).second )* ApplyCorrection(_instlumi, "instlumi", (params_instlumi[0]).first , (params_instlumi[0]).second );
 		 
 			 // ApplyCorrection(_instlumi, "instlumi", (params_instlumi[idforcorr]).first , (params_instlumi[idforcorr]).second ) ;
     // we need to compute the integratelumi again, since we do not need the iterations till second histograms, 
 		// We can make SaveHistos false, but we can just save the integratelumi plots and write all the trees 
 //		 if(seconditer) charge = charge *  ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[idforcorr]).first , (params_pressure_2[idforcorr]).second )  * ApplyCorrection(_instlumi, "instlumi", (params_instlumi_2[idforcorr]).first , (params_instlumi_2[idforcorr]).second ) ;
-		 if(seconditer) charge = charge *  ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[idforcorr]).first , (params_pressure_2[idforcorr]).second );
+//		 if(seconditer) charge = charge *  ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[idforcorr]).first , (params_pressure_2[idforcorr]).second );
+		 if(seconditer) charge = charge *  ApplyCorrection( _pressure ,"pressure",   (params_pressure_2[0]).first , (params_pressure_2[0]).second );
 	 //	 * ApplyCorrection(_instlumi, "instlumi", (params_instlumi_2[idforcorr]).first , (params_instlumi_2[idforcorr]).second ) ;
 
      hchargevsintegratelumi->Fill(charge, _integratelumi, rhidreduced);
@@ -653,13 +667,6 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
          }
       }// End of special case
        
-			  if(h==0 && (j==1 || j==2 || j==3 || j==4)) {
- 					TCanvas * c = new TCanvas();
-					c->cd();
-					proj->Draw();
-					c->SaveAs("before_trimming_int_lumi_plot_"+thevar+"_bin_"+j+".pdf");
-				}
-
 			/*	  	 if(rhidshort=="allgoodchannels"  &&savehistos){
 			   gStyle->SetOptStat("kKsSiourRmMen");
 			 	 TCanvas *canvas_charge = new TCanvas();
@@ -753,6 +760,7 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
        	 if(thevar.Index("integratelumi")>=0 ){
 					  if(debug_statements)  std::cout<<"coming to  all  channels : rhid :var  "<<rhidshort<<" : "<<thevar<<std::endl;
 				  	if(debug_statements)  std::cout<<" particular rhid bin number in integratelumi "<<j<<" entries "<<h_trim->Integral()<<"mean "<<h_trim->GetMean()<<std::endl;
+
        	    if(j==1){
 						// Integral greater than 50 ensures that we have enough entries
 	       	    htrimmeanvsX->SetBinContent(j, 1 );
@@ -761,8 +769,8 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
 							//error_renormalfactor = h_trim->GetRMS()/sqrt(h_trim->Integral());
 							error_renormalfactor = h_trim->GetMeanError();
  						  error_value = sqrt(pow(h_trim->GetMeanError()* 1/renormalfactor ,2) +pow((h_trim->GetMean()/(renormalfactor* renormalfactor))*error_renormalfactor,2) );
-							gas_gain_vector.push_back(1);
-						  gas_gain_error_vector.push_back(error_value);
+//             	gas_gain_vector.push_back(1);
+//						  gas_gain_error_vector.push_back(error_value);
 
 							// propogation of errors
 //							error_value = sqrt( pow( (h_trim->GetRMS()/sqrt(h_trim->Integral())) * 1/renormalfactor,2) +pow((h_trim->GetMean()/(renormalfactor* renormalfactor))*error_renormalfactor,2) );
@@ -785,8 +793,8 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
        	    htrimmeanvsX->SetBinContent(j, h_trim->GetMean()/renormalfactor );
        	    htrimmeanvsX->SetBinError(j,error_value);
 						
-						gas_gain_vector.push_back(h_trim->GetMean()/renormalfactor);
-						gas_gain_error_vector.push_back(error_value);
+//						gas_gain_vector.push_back(h_trim->GetMean()/renormalfactor);
+//						gas_gain_error_vector.push_back(error_value);
 
        	    //htrimmeanvsX->SetBinError(j, h_trim->GetRMS()/sqrt(h_trim->Integral() )/renormalfactor );
        	  }
@@ -800,8 +808,18 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
         delete proj;
         delete h_trim;
        } //end of loop over  bins of variable of intereset
-     
+
     if(htrimmeanvsX->Integral()==0) continue;
+		
+/*		if(thevar.Index("time") >=0) {
+			for(int i=1; i<=40; i=i+5){
+			 old_time = htrimmeanvsX->GetXaxis()->GetBinLowEdge(i);
+			 new_time = time_conv(old_time);
+			 new_time_Char = new_time.c_str();
+			 htrimmeanvsX->GetXaxis()->SetBinLabel(i, new_time_Char);
+			}
+		} */
+     
 
 
     TCanvas * c3 = new TCanvas;
@@ -876,6 +894,8 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
     parampair.first =  fa1->GetParameter(0) ;
     parampair.second =  fa1->GetParameter(1) ;
 		}
+    //result[h] = parampair;
+		// modifying result so that it contains slope from all good channels together
     result[h] = parampair;
     
     if(thevar.Index("integratelumi")>=0 ){ 
@@ -909,7 +929,7 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
       } 
 		}//end of if condition for  writing tree for instlumi and intlumi parameters  
 	} //end of loop for all the channelss 
-
+  
   if( thevar.Index("instlumi")>=0  ) h_slope->GetXaxis()->SetTitle("Slope of #Delta Q vs instant Luminosity (/#mu b^{-1} s^{-1})");
   if( thevar.Index("integrate")>=0  ) h_slope->GetXaxis()->SetTitle("Slope of #Delta Q vs #int L (/fb^{-1})");
   if( thevar.Index("pressure")>=0  )  h_slope->GetXaxis()->SetTitle("Slope of #Delta Q vs P (hPa^{-1})");
@@ -946,30 +966,4 @@ double ProduceHistosPerChannel::ApplyCorrection( double X ,TString correctiontyp
   
   return 1;
 
-}
-void ProduceHistosPerChannel::plot_gain_time(){
-// Convert  time into other format
-// save the values in a text file 
-ofstream text_file;
-text_file.open("gain_time.csv");
-text_file<<" { "<<std::endl;
-for(int i=0; i<40; i++){
-text_file<<time_vector[i]<<" , ";
-}
-text_file<<" } "<<std::endl;
-text_file<<" gain = { "<<std::endl;
-for(int i=0; i<40; i++){
-text_file<<gas_gain_vector[i]<<" ,";
-}
-text_file<<" } "<<std::endl;
-TGraphErrors *gr = new TGraphErrors();
- for(int i=0; i<40; i++){ 
-		gr->SetPoint(i, time_vector[i],gas_gain_vector[i]);
-	 	gr->SetPointError(i,0 ,gas_gain_error_vector[i]);
- }
-TCanvas *c = new TCanvas("c", "canvas ");
-c->cd();
-gr->Draw();
-c->SaveAs("Gas_gain_with_time.pdf");
-c->Close(); 
 }

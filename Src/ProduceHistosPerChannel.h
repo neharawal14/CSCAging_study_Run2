@@ -89,7 +89,12 @@ public :
 		std::vector<UInt_t> time_vector;
 		std::vector<double> gas_gain_vector;
 		std::vector<double> gas_gain_error_vector;
+		double time_value;
+		double old_time;
+    std::string new_time;
+    const char* new_time_Char;
 
+	  std::string time_conv(double timeSeconds);
 		void plot_gain_time();
 
 };
@@ -170,6 +175,25 @@ void ProduceHistosPerChannel::Init(TTree *tree)
 
    Notify();
    
+}
+std::string time_conv(double timeSeconds) {
+    // Set the time in seconds                                                                                                       
+                                                                                                                                     
+    // Convert to time_t (seconds since epoch)                                                                                       
+    time_t timeEpoch = timeSeconds;
+                                                                                                                                     
+    // Convert to tm structure                                                                                                       
+    struct tm* timeInfo = gmtime(&timeEpoch);
+                                                                                                                                     
+    // Format the date and time                                                                                                      
+    std::string strBuffer(80, '\0'); 
+    strftime(&strBuffer[0], 80, "%d/%m", timeInfo);
+                                                                                                                                     
+    // Print the date and time                                                                                                       
+    std::cout << "Time in seconds: " << timeSeconds << std::endl; 
+    std::cout << "Date and time: " << strBuffer << std::endl;
+                                                                                                                                     
+    return strBuffer;
 }
 
 Bool_t ProduceHistosPerChannel::Notify()

@@ -307,7 +307,7 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
    
    vector< std::pair<double, double > > params_integratelumi_first_correction;
    params_integratelumi_first_correction = GetSlope(hchargevsintegratelumi_first_correction, "_integratelumi_first_correction", detregionstr,"",outf);
-
+*/
    //Now, run on all events, apply pressure correction and extract inst L correction
 
    TH3D * hchargevsinstlumi = new TH3D("hchargevsinstlumi","charge (ADC counts) vs inst lumi",3000,0,3000, 42, 0,21000  ,770,1,771);
@@ -448,13 +448,13 @@ void ProduceHistosPerChannel::Loop(TString input_file_path, TString input_file_n
      
    }
    
-*/   
- //  vector< std::pair<double, double > > params_integratelumi;
- //  params_integratelumi = GetSlope( hchargevsintegratelumi, "_integratelumi", detregionstr,"",outf); 
-//  hchargevspressure_2->Write(); 
-//  hchargevsinstlumi->Write();
-//  hchargevsintegratelumi->Write();
-//  hchargevsinstlumi_2->Write();
+   
+   vector< std::pair<double, double > > params_integratelumi;
+   params_integratelumi = GetSlope( hchargevsintegratelumi, "_integratelumi", detregionstr,"",outf); 
+  hchargevspressure_2->Write(); 
+  hchargevsinstlumi->Write();
+  hchargevsintegratelumi->Write();
+  hchargevsinstlumi_2->Write();
   hchargevspressure->Write();
   hchargevsintegratelumi_initial->Write();
 //  hchargevsintegratelumi_first_correction->Write();
@@ -602,8 +602,7 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
     
 		//Loop over the bins of the variable of interest
     //Get the rechit ADC charge distribution for a given bin of the variable of interest
-    //for(int j = 1; j <= myh->GetNbinsY(); j++){
-    for(int j = 10; j <= 10; j++){
+    for(int j = 1; j <= myh->GetNbinsY(); j++){
       TH1D* proj = (h==0)? (TH1D*) (myh->ProjectionX("_px",j,j,0,0))->Clone() : (TH1D*)(myh->ProjectionX("_px",j,j,h,h))->Clone();  
 		//		if(debug_statements) std::cout<<"Before adding the channels the integral for allgoodchannels "<<thevar<<" integral "<<proj->Integral()<<std::endl;
 			 if(h==0) proj->Reset("ICESM");
@@ -662,7 +661,6 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
 				   	}
 					  h_prov_new->SetBinContent(last_bin, entries_last_bin);
 					  h_prov_new->SetBinError(last_bin, h_prov->GetBinError(last_bin));
-						std::cout<<" in case of all goodchannels for bin "<<j<<" before integral "<<h_prov->Integral()<<" after integral "<<h_prov_new->Integral()<<std::endl;
 /*					  for(int it=last_bin+1; it<=h_prov->GetNbinsX() ; it++) {
 					  	h_prov_new->SetBinContent(it,0);
 					  	h_prov_new->SetBinError(it,0);
@@ -687,12 +685,12 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
 			gStyle->SetOptStat("kKsSiourRmMen");
 
 			// before truncating lets plot charge distribution 
-    	if(h_trim->Integral()>0 && (thevar.Index("integratelumi")>=0 || thevar.Index("pressure") >=0 || thevar.Index("instlumi")>=0) &&savehistos && (rhidshort=="chamber36_layer6_Endcap2" || rhidshort =="chamber9_layer1_Endcap1" || rhidshort=="allgoodchannels")){
+/*    	if(h_trim->Integral()>0 && (thevar.Index("integratelumi")>=0 || thevar.Index("pressure") >=0 || thevar.Index("instlumi")>=0) &&savehistos && (rhidshort=="chamber36_layer6_Endcap2" || rhidshort =="chamber9_layer1_Endcap1" || (rhidshort=="allgoodchannels" && j==2))){
 			 	 TCanvas *canvas_charge = new TCanvas();
  			 	 canvas_charge->cd();
 	    	 h_trim->Draw("E");
  			 	 canvas_charge->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"/charge_distribution"+title+"_"+rhidshort+"vs"+thevar+"_bin"+j+"_before_trim.pdf"); 
-			 } 
+			 } */
 
 		     	
 			//
@@ -750,6 +748,11 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
 						h_trim_new->SetBinError(it,0);
 					}*/
 					float final_integral = new_integral+entries_last_bin;
+				}
+			/*			if(h_trim->GetEntries() <=10){
+					std::cout<<" integral before : "<<normal<<" integral later "<<final_integral<<std::endl;
+						 std::cout<<"entries in new  histogram at last : rhid"<<rhidshort<<" bin "<<j<<" "<<h_trim_new->GetEntries()<<" integral "<<h_trim_new->Integral()<<" mean "<<h_trim_new->GetMean()<<std::endl;
+						 std::cout<<"entries in new  histogram at last : rhid"<<rhidshort<<" bin "<<j<<" "<<h_trim_new->GetEntries()<<" integral "<<h_trim_new->Integral()<<" mean "<<h_trim_new->GetMean()<<std::endl;
 					for(int bin=0;bin<=h_trim->GetNbinsX();bin++){
 					std::cout<<"entrie : rhid"<<rhidshort<<" var"<<thevar<<" bin number"<<j<<" entries "<<h_trim->GetBinContent(bin)<<" xvalue "<<h_trim->GetBinLowEdge(bin)<<" bin center "<<h_trim->GetBinCenter(bin)<<std::endl;
 					}
@@ -758,24 +761,16 @@ vector < std::pair<double, double > >  ProduceHistosPerChannel::GetSlope( TH3D *
 					for(int bin=0;bin<=h_trim_new->GetNbinsX();bin++){
 					std::cout<<"entrie : rhid"<<rhidshort<<" var"<<thevar<<" bin number"<<j<<" entries "<<h_trim_new->GetBinContent(bin)<<" xvalue "<<h_trim_new->GetBinLowEdge(bin)<<" bin center "<<h_trim->GetBinCenter(bin)<<std::endl;
 					}
-
-					std::cout<<" mean before : "<<h_trim->GetMean()<<" mean  later "<<h_trim_new->GetMean()<<std::endl;
-   	 if(h_trim->Integral()>0 && (thevar.Index("pressure")>=0) && (rhidshort=="chamber36_layer6_Endcap2" || rhidshort =="chamber9_layer1_Endcap1" || rhidshort=="allgoodchannels") ){
-			 	 TCanvas *canvas_charge = new TCanvas();
- 			 	 canvas_charge->cd();
-	    	 h_trim_new->Draw("E");
- 			 	 canvas_charge->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"/charge_distribution"+title+"_"+rhidshort+"vs"+thevar+"_bin"+j+"_after_trim.pdf"); 
-			 } 
-
- }
-			/*			if(h_trim->GetEntries() <=10){
-					std::cout<<" integral before : "<<normal<<" integral later "<<final_integral<<std::endl;
-						 std::cout<<"entries in new  histogram at last : rhid"<<rhidshort<<" bin "<<j<<" "<<h_trim_new->GetEntries()<<" integral "<<h_trim_new->Integral()<<" mean "<<h_trim_new->GetMean()<<std::endl;
-						 std::cout<<"entries in new  histogram at last : rhid"<<rhidshort<<" bin "<<j<<" "<<h_trim_new->GetEntries()<<" integral "<<h_trim_new->Integral()<<" mean "<<h_trim_new->GetMean()<<std::endl;
 						} */
  //			 gStyle->SetOptStat("kKsSiourRmMen");
 //		  if(debug_statements) std::cout<<" rhid channel "<<rhidshort<<" bin number "<<j<<" Integral "<<h_trim->Integral()<<" value of mean after trimming "<<h_trim->GetMean()<<" Error on mean "<<h_trim->GetMeanError()<<std::endl;
-/* 
+/*    	 if(h_trim->Integral()>0 && (thevar.Index("integratelumi")>=0) && rhidshort =="allgoodchannels"){
+			 	 TCanvas *canvas_charge = new TCanvas();
+ 			 	 canvas_charge->cd();
+	    	 h_trim->Draw("E");
+ 			 	 canvas_charge->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"/charge_distribution"+title+"_"+rhidshort+"vs"+thevar+"_bin"+j+"_after_trim.pdf"); 
+			 } 
+
      	   if(thevar.Index("instlumi") >=0){
            htrimmeanvsX->SetBinContent(j, h_trim->GetMean() ); 
      	     htrimmeanvsX->SetBinError(j, h_trim->GetMeanError() ) ; 

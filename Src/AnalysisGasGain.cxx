@@ -46,6 +46,8 @@ bool debug_bool = false;
 bool debug_bool_region = false;
 bool debug_program = false;
 bool debug_first = false ;
+
+// Important note : Endcap =1 => Plus Endcap , Endcap =2 => Minus Endcap
 AnalysisGasGain::AnalysisGasGain() { }
 
 AnalysisGasGain::~AnalysisGasGain() { }

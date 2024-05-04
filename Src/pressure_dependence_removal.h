@@ -30,6 +30,8 @@ public :
    Int_t           _stationring;
    Double_t        _rhsumQ;
    Double_t        _rhsumQ_RAW;
+   Double_t        _HV;
+   //Double_t        _current;
 
    Double_t        _pressure;
    Double_t        _temperature;
@@ -47,6 +49,8 @@ public :
    Int_t            new_stationring;
    Double_t         new_rhsumQ;
    Double_t         new_rhsumQ_RAW;
+   Double_t         new_HV;
+   //Double_t         new_current;
 
    Double_t         new_pressure;
    Double_t         new_temperature;
@@ -65,6 +69,8 @@ public :
    TBranch        *b__stationring;   //!
    TBranch        *b__rhsumQ;   //!
    TBranch        *b__rhsumQ_RAW;   //!
+   TBranch        *b__HV;   //!
+//   TBranch        *b__current;   //!
    TBranch        *b__pressure;   //!
    TBranch        *b__temperature;   //!
    TBranch        *b__instlumi;   //!
@@ -154,20 +160,22 @@ Long64_t pressure_dependence_removal::LoadTree(Long64_t entry)
 
 void pressure_dependence_removal::Setup_new_tree(){
 
- tree_new->Branch("new_eventNb",&new_eventNb, "new_eventNb/l");
- tree_new->Branch("new_runNb",&new_runNb, "new_runNb/l");
- tree_new->Branch("new_lumiBlock",&new_lumiBlock, "new_lumiBlock/l");
- tree_new->Branch("new_rhid",&new_rhid, "new_rhid/I");
- tree_new->Branch("new_stationring",&new_stationring, "new_stationring/I");
- tree_new->Branch("new_rhsumQ",&new_rhsumQ , "new_rhsumQ/D");
- tree_new->Branch("new_rhsumQ_RAW", &new_rhsumQ_RAW, "new_rhsumQ_RAW/D");
- tree_new->Branch("new_pressure", &new_pressure, "new_pressure/D");
- tree_new->Branch("new_temperature", &new_temperature, "new_temperature/D");
- tree_new->Branch("new_instlumi", &new_instlumi, "new_instlumi/D");
- tree_new->Branch("new_integratelumi", &new_integratelumi, "new_integratelumi/D");
- tree_new->Branch("new_timesecond",&new_timesecond, "new_timesecond/i");
- tree_new->Branch("new_n_PV", &new_n_PV, "new_n_PV/I");
- tree_new->Branch("new_bunchcrossing", &new_bunchcrossing, "new_bunchcrossing/I");
+ tree_new->Branch("_eventNb",&new_eventNb, "new_eventNb/l");
+ tree_new->Branch("_runNb",&new_runNb, "new_runNb/l");
+ tree_new->Branch("_lumiBlock",&new_lumiBlock, "new_lumiBlock/l");
+ tree_new->Branch("_rhid",&new_rhid, "new_rhid/I");
+ tree_new->Branch("_stationring",&new_stationring, "new_stationring/I");
+ tree_new->Branch("_rhsumQ",&new_rhsumQ , "new_rhsumQ/D");
+ tree_new->Branch("_rhsumQ_RAW", &new_rhsumQ_RAW, "new_rhsumQ_RAW/D");
+ tree_new->Branch("_HV", &new_HV, "new_HV/D");
+// tree_new->Branch("_current", &new_current, "new_current/D");
+ tree_new->Branch("_pressure", &new_pressure, "new_pressure/D");
+ tree_new->Branch("_temperature", &new_temperature, "new_temperature/D");
+ tree_new->Branch("_instlumi", &new_instlumi, "new_instlumi/D");
+ tree_new->Branch("_integratelumi", &new_integratelumi, "new_integratelumi/D");
+ tree_new->Branch("_timesecond",&new_timesecond, "new_timesecond/i");
+ tree_new->Branch("_n_PV", &new_n_PV, "new_n_PV/I");
+ tree_new->Branch("_bunchcrossing", &new_bunchcrossing, "new_bunchcrossing/I");
 
 }
 
@@ -194,6 +202,8 @@ void pressure_dependence_removal::Init(TTree *tree)
    fChain->SetBranchAddress("_stationring", &_stationring, &b__stationring);
    fChain->SetBranchAddress("_rhsumQ", &_rhsumQ, &b__rhsumQ);
    fChain->SetBranchAddress("_rhsumQ_RAW", &_rhsumQ_RAW, &b__rhsumQ_RAW);
+   fChain->SetBranchAddress("_HV", &_HV, &b__HV);
+//   fChain->SetBranchAddress("_current", &_current, &b__current);
    fChain->SetBranchAddress("_pressure", &_pressure, &b__pressure);
    fChain->SetBranchAddress("_temperature", &_temperature, &b__temperature);
    fChain->SetBranchAddress("_instlumi", &_instlumi, &b__instlumi);

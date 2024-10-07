@@ -1,15 +1,27 @@
 #ifndef ROOT_AnalysisGasGain
 #define ROOT_AnalysisGasGain
-
 #include "HistMan.h"
+#include <algorithm>
+#include <vector>
 #include "TTree.h"
-
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include "TTree.h"
+#include "TFile.h"
+#include "TLorentzVector.h"
+#include <limits>
+#include <map>
+using namespace std;
 class AnalysisGasGain : public TObject {
 
 private:
 
   string  ntuplename;      // input ntuple file
   string  histrootname;    // output ROOT file with hists
+	string year;
 
   Int_t nentries;          // Tree entries
   Int_t entries_analyzed;  // # of analyzed entries
@@ -51,6 +63,7 @@ private:
   std::vector< std::vector<Double_t> > *fmuons_cscSegmentRecord_localX;
 
   Int_t fmuons_nMuons;  
+  Int_t fmuons_charge[200];  
   Double_t fmuons_pt[200] ; 
   Double_t fmuons_eta[200] ; 
   Double_t fmuons_phi[200] ; 
@@ -58,8 +71,28 @@ private:
   Double_t fmuons_dz[200] ; 
   Double_t fmuons_dxy[200] ; 
   Double_t fmuons_isoCH03[200] ; 
+  Double_t fmuons_isoNH03[200] ; 
+  Double_t fmuons_isoPhot03[200] ; 
+  Double_t fmuons_isoPU03[200] ; 
+
+  Double_t fmuons_isoCH04[200] ; 
+  Double_t fmuons_isoNH04[200] ; 
+  Double_t fmuons_isoPhot04[200] ; 
+  Double_t fmuons_isoPU04[200] ; 
+
   Bool_t fmuons_Zcand[200];
   Bool_t fmuons_isomuondzdxy[200];
+
+  // New muon variable we are adding so can apply tight ID
+  Bool_t fmuons_isGlobalMuon[200];
+  Bool_t fmuons_isPFMuon[200];
+  Double_t fmuons_globalTrackNormalizedChi2[200];
+  Int_t fmuons_globalTrackNumberOfValidMuonHits[1000];
+  Int_t fmuons_trackNumberOfValidHits[1000];
+  Int_t fmuons_numberOfMatches[1000];
+  Bool_t fmuons_isTrackerMuon[200];
+  Int_t fmuons_numberOfChambers[1000];
+ Int_t fmuons_numberOfSegments[1000];
 
   // Yloc boundaries of HV segments in CSC layers
   // Low and High Y local coordinates (cm) of the segments
@@ -109,6 +142,7 @@ private:
   double _rhsumQ;
   double _rhsumQ_RAW;
   double _HV;
+  double _current;
   double _pressure;
   double _temperature;
   double _instlumi;
@@ -117,6 +151,7 @@ private:
   Int_t _n_PV;
   Int_t _bunchcrossing;
   Bool_t passZmumusel;
+  Bool_t passisomuondzdxy;
   double _ptmuon;
   double _etamuon;
   double _phimuon;
@@ -124,13 +159,17 @@ private:
 	double z_eta;
 	double z_phi;
 	double z_mass;
+	double isolation1;
+	double isolation2;
 
+	double iso_PF_first;
+	double iso_PF_second;
 public:
 
   AnalysisGasGain();
   virtual ~AnalysisGasGain();
 
-  void Setup(Int_t,Int_t,string,string);
+  void Setup(Int_t,Int_t,string,string, string);
 
   void SetupPrint();
   void SetupTree();

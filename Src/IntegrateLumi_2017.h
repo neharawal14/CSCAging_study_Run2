@@ -1,5 +1,5 @@
 // this is delivered luminosity
-double integlumi2017(int run){ 
+double integlumi_2017(int run){ 
 if(run ==  297050) return 96.16270615864386;
 if(run ==  297056) return 127.54793798597763;
 if(run ==  297057) return 242.3629474719846;

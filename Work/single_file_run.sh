@@ -1,2 +1,0 @@
-#root -l -b -q ../Src/HistMan_cxx.so ../Src/AnalysisGasGain_cxx.so analysisgasgain.C\(0,0,\"/cmsuf/data/store/user/klo/CSC/CSCNTuple/SingleMuonRun2017C-ZMu-v1/SingleMuon/Run2017C-PromptReco-ZMu-v1/180502_162630/0000/DUMMYFILENAME_116.root\",\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_newfiles/myoutput_C.root\"\) 
-root -l -b -q ../Src/HistMan_cxx.so ../Src/AnalysisGasGain_cxx.so analysisgasgain.C\(0,0,\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/DUMMYFILENAME.root\",\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/csc_output.root\"\) 

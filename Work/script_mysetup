@@ -1,8 +1,0 @@
-#!/bin/sh
-# Setup global variables used in the gas gain study code and macros at UF
-# Modify script accordingly to paths you have and are going to use.
-
-export USERFOLDER=/blue/avery/neha.rawal/CSCAgeingP5/CMSSW_8_0_27/src/CSCAgeingP5
-export WORK=$USERFOLDER/Work
-export SRC=$USERFOLDER/Src
-export OUT=/cmsuf/data/store/user/t2/users/neha.rawal/CSC_2017_data_RAW_RECO/nTuple_output/2017

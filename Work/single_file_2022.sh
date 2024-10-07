@@ -1,1 +1,0 @@
-root -l -b -q ../Src/HistMan_cxx.so ../Src/AnalysisGasGain_cxx.so analysisgasgain.C\(0,0,\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/input_ntuples/2022D_problematic/Muon_Run2022D-ZMu-PromptReco-v1_146.root\",\"/cmsuf/data/store/user/t2/users/neha.rawal/CSCAgeing_2022/input_ntuples/2022D_problematic/corrupt_146output.root\"\)

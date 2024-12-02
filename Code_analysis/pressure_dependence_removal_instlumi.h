@@ -30,7 +30,9 @@ public :
    Int_t           _stationring;
    Double_t        _rhsumQ;
    Double_t        _rhsumQ_RAW;
+   Double_t        _rhsumQ_equalised_HV_data;
    Double_t        _HV;
+   Double_t        _HV_nominal;
    Double_t        z_mass;
    //Double_t        _current;
 
@@ -51,7 +53,9 @@ public :
    Int_t            new_stationring;
    Double_t         new_rhsumQ;
    Double_t         new_rhsumQ_RAW;
+   Double_t         new_rhsumQ_equalised_HV_data;
    Double_t         new_HV;
+   Double_t         new_HV_nominal;
    //Double_t         new_current;
 
    Double_t         new_pressure;
@@ -84,6 +88,8 @@ public :
    TBranch        *b__n_PV;   //!
    TBranch        *b__bunchcrossing;   //!
    TBranch        *b__passZmumusel;   //!
+   TBranch        *b__rhsumQ_equalised_HV_data;
+   TBranch        *b__HV_nominal;
 
 
 	 TDirectory *dir_var_name;
@@ -98,7 +104,7 @@ public :
 
 	std::vector<float > trimmed_mean(TH2D *myh);
    std::vector <std::pair<double,double > >  GetSlope( TH3D * myh , TString thevar , TString filename, TString title, TFile * outf, TString chamber_name_string);
-   void defining_bool();
+   void defining_bool(TString year_string, double, double, double ,double);
    double ApplyCorrection( double pressure ,TString correctiontype, double p0, double p1 );
    virtual void  Loop(TString , TString, TString, TString, TString);
    
@@ -131,6 +137,7 @@ public :
 
     TString year;
       bool testing_code ;
+      bool second_iteration;
       // for intlumi corrections, time
       bool intlumi_initial;
       bool time_initial;
@@ -155,6 +162,14 @@ public :
       bool instlumi_corr_2017 ;
       bool instlumi_corr_2018 ;
       bool intlumi_const ;
+      bool pressure_const ;
+
+     double instlumi_low_cut_2016, instlumi_up_cut_2016; 
+     double instlumi_low_cut_2017, instlumi_up_cut_2017; 
+     double instlumi_low_cut_2018, instlumi_up_cut_2018; 
+     double intlumi_low_cut_2016, intlumi_up_cut_2016; 
+     double intlumi_low_cut_2017, intlumi_up_cut_2017; 
+     double intlumi_low_cut_2018, intlumi_up_cut_2018; 
 
 };
 
@@ -243,7 +258,9 @@ inline void pressure_dependence_removal_instlumi::Init(TTree *tree)
    fChain->SetBranchAddress("_stationring", &_stationring, &b__stationring);
    fChain->SetBranchAddress("_rhsumQ", &_rhsumQ, &b__rhsumQ);
    fChain->SetBranchAddress("_rhsumQ_RAW", &_rhsumQ_RAW, &b__rhsumQ_RAW);
+   fChain->SetBranchAddress("_rhsumQ_equalised_HV_data", &_rhsumQ_equalised_HV_data, &b__rhsumQ_equalised_HV_data);
    fChain->SetBranchAddress("_HV", &_HV, &b__HV);
+   fChain->SetBranchAddress("_HV_nominal", &_HV_nominal, &b__HV_nominal);
 //   fChain->SetBranchAddress("_current", &_current, &b__current);
    fChain->SetBranchAddress("_pressure", &_pressure, &b__pressure);
    fChain->SetBranchAddress("_temperature", &_temperature, &b__temperature);

@@ -13,13 +13,13 @@ cmsenv
 ### Clone the repository and setup your development branch
 ```
 git init
-git remote add origin git@github.com:neharawal14/CSCAgeing-studies.git
+git remote add origin git@github.com:neharawal14/CSCAging_study_Run2.git
 ```
 
 #### checkout the development branch (ageing_dev2022)
 ```
 git fetch origin
-git checkout origin/ageing_dev2022
+git checkout origin/master
 ```
 
 #### Create your own branch for further development (this is optional , but if you are in a detached state then please make your branch)

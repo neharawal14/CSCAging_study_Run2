@@ -14,34 +14,64 @@ int main(int argc, char*argv []){
   double intlumi_low , intlumi_up;
   double instlumi_low , instlumi_up;
 
-  if(number=="first"){
-    intlumi_low =5; 
-    intlumi_up =18; 
-    instlumi_low =6000; 
-    instlumi_up =9000; 
-  }
-  if(number=="second"){
-    intlumi_low =20; 
-    intlumi_up =30; 
+    intlumi_low =0; 
+    intlumi_up =100; 
     instlumi_low =7000; 
     instlumi_up =10000; 
-  }
-  if(number=="third"){
-    intlumi_low =30; 
-    intlumi_up =40; 
-    instlumi_low =8000; 
-    instlumi_up =11000; 
-  }
-  if(number=="complete"){
-    intlumi_low =5; 
-    intlumi_up =40; 
-    instlumi_low =6000; 
-    instlumi_up =9000; 
-  }
 
-  TString output_file_path = "/eos/home-n/nrawal/CSCAgeing/2024_new_plots/yearwise_results/"+year+"_"+number+"_period_new/";
+///  if(number=="small_instlumi"){
+///    intlumi_low =5; 
+///    intlumi_up =18; 
+///    instlumi_low =6000; 
+///    instlumi_up =6500; 
+///  }
+///  if(number=="LThomas"){
+///    intlumi_low =12; 
+///    intlumi_up =16; 
+///    instlumi_low =7000; 
+///    instlumi_up =9000; 
+///  }
+///
+///  if(number=="first"){
+///    intlumi_low =5; 
+///    intlumi_up =18; 
+///    instlumi_low =0; 
+///    instlumi_up =20000; 
+///
+/////    instlumi_low =6000; 
+/////    instlumi_up =9000; 
+///  }
+///  if(number=="second"){
+///    intlumi_low =20; 
+///    intlumi_up =30; 
+///    instlumi_low =0; 
+///    instlumi_up =20000; 
+///
+/////    instlumi_low =7000; 
+/////    instlumi_up =10000; 
+///  }
+///  if(number=="third"){
+///    intlumi_low =30; 
+///    intlumi_up =40; 
+///    instlumi_low =0; 
+///    instlumi_up =20000; 
+///
+/////    instlumi_low =8000; 
+/////    instlumi_up =11000; 
+///  }
+///  if(number=="complete"){
+///    intlumi_low =5; 
+///    intlumi_up =40; 
+///    instlumi_low =0; 
+///    instlumi_up =20000; 
+///
+/// //   instlumi_low =6000; 
+/// //   instlumi_up =9000; 
+///  }
+
+  TString output_file_path = "/eos/home-n/nrawal/CSCAgeing/2024_new_plots/wider_pressure_range/2016_complete_pressure_instlumi/";
   TString output_path_folder = "/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/applying_correction/plotfolder/";
-
+  
   pressure_dependence_removal_instlumi m;
 
   m.defining_bool(year, intlumi_low, intlumi_up, instlumi_low, instlumi_up);

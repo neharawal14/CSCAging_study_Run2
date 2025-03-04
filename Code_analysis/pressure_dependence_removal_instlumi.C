@@ -26,30 +26,65 @@ enum ring_station_hvsegm {
 
 
 void pressure_dependence_removal_instlumi::defining_bool(TString year_string, double intlumi_low_value, double intlumi_up_value, double instlumi_low_value, double instlumi_up_value) { 
+//void pressure_dependence_removal_instlumi::defining_bool(double intlumi_low_value_2016, double intlumi_up_value_2016,
+//    double instlumi_low_value_2016, double instlumi_up_value_2016, 
+//    double intlumi_low_value_2017, double intlumi_up_value_2017, 
+//    double instlumi_low_value_2017, double instlumi_up_value_2017, 
+//    double intlumi_low_value_2018, double intlumi_up_value_2018, 
+//    double instlumi_low_value_2018, double instlumi_up_value_2018
+//    ) { 
+ 
  testing_code = false;
- second_iteration = false;
-// for intlumi corrections, time
- intlumi_initial = true;
- intlumi_final = true;
+ second_iteration =true;
+//// for intlumi corrections, time
+ intlumi_initial = false;
+ intlumi_final = false;
  time_initial = false;
  time_final = false;
-
+ 
  pressure_corr =true;
- instlumi_corr =true;
- intlumi_const =true;
- intlumi_instlumi_const = true;
+ instlumi_corr =false;
+ intlumi_const =false;
+ intlumi_instlumi_const = false;
  year = year_string;
+/// intlumi_corr_2016 = true;
+/// intlumi_corr_2017 = true;
+/// intlumi_corr_2018 = true;
+///
+/// pressure_corr_2016 = true;
+/// pressure_corr_2017 = true;
+/// pressure_corr_2018 = true;
+///// instlumi corrections
+/// instlumi_corr_2016 = true;
+/// instlumi_corr_2017 = true;
+/// instlumi_corr_2018 = true;
+///
+/// intlumi_low_cut_2016 = intlumi_low_value_2016; 
+/// intlumi_up_cut_2016 = intlumi_up_value_2016; 
+/// instlumi_low_cut_2016 = instlumi_low_value_2016; 
+/// instlumi_up_cut_2016 = instlumi_up_value_2016; 
+///
+/// intlumi_low_cut_2017 = intlumi_low_value_2017; 
+/// intlumi_up_cut_2017 = intlumi_up_value_2017; 
+/// instlumi_low_cut_2017 = instlumi_low_value_2017; 
+/// instlumi_up_cut_2017 = instlumi_up_value_2017; 
+///
+/// intlumi_low_cut_2018 = intlumi_low_value_2018; 
+/// intlumi_up_cut_2018 = intlumi_up_value_2018; 
+/// instlumi_low_cut_2018 = instlumi_low_value_2018; 
+/// instlumi_up_cut_2018 = instlumi_up_value_2018; 
+
  // for anlaysing only 2016
  if(year=="2016"){
  intlumi_corr_2016 = true;
  intlumi_corr_2017 = false;
  intlumi_corr_2018 = false;
  
- pressure_corr_2016 = true;
+ pressure_corr_2016 = false;
  pressure_corr_2017 = false;
  pressure_corr_2018 = false;
-// instlumi corrections
- instlumi_corr_2016 = true;
+ // instlumi corrections
+ instlumi_corr_2016 = false;
  instlumi_corr_2017 = false;
  instlumi_corr_2018 = false;
 
@@ -57,20 +92,19 @@ void pressure_dependence_removal_instlumi::defining_bool(TString year_string, do
  intlumi_up_cut_2016 = intlumi_up_value; 
  instlumi_low_cut_2016 = instlumi_low_value; 
  instlumi_up_cut_2016 = instlumi_up_value; 
-
  }
 
  if(year=="2017"){
  intlumi_corr_2016 = false;
- intlumi_corr_2017 = true;
+ intlumi_corr_2017 = false;
  intlumi_corr_2018 = false;
  
- pressure_corr_2016 = false;
+pressure_corr_2016 = false;
  pressure_corr_2017 = true;
  pressure_corr_2018 = false;
-// instlumi corrections
+ //instlumi corrections
  instlumi_corr_2016 = false;
- instlumi_corr_2017 = true;
+ instlumi_corr_2017 = false;
  instlumi_corr_2018 = false;
  intlumi_low_cut_2017 = intlumi_low_value; 
  intlumi_up_cut_2017 = intlumi_up_value; 
@@ -82,7 +116,7 @@ void pressure_dependence_removal_instlumi::defining_bool(TString year_string, do
  if(year=="2018"){
  intlumi_corr_2016 = false;
  intlumi_corr_2017 = false;
- intlumi_corr_2018 = true;
+ intlumi_corr_2018 = false;
  
  pressure_corr_2016 = false;
  pressure_corr_2017 = false;
@@ -90,7 +124,7 @@ void pressure_dependence_removal_instlumi::defining_bool(TString year_string, do
 // instlumi corrections
  instlumi_corr_2016 = false;
  instlumi_corr_2017 = false;
- instlumi_corr_2018 = true;
+ instlumi_corr_2018 = false;
  intlumi_low_cut_2018 = intlumi_low_value; 
  intlumi_up_cut_2018 = intlumi_up_value; 
  instlumi_low_cut_2018 = instlumi_low_value; 
@@ -144,7 +178,7 @@ void pressure_dependence_removal_instlumi::defining_bool(TString year_string, do
 // pressure_const = false;
 }
 
-bool instlumicorr =true;
+bool instlumicorr =false;
 double trimmean =0.85;
 
 bool dropinstlumicorr =false; // Drop inst L correction
@@ -233,6 +267,8 @@ TString thestationringhv(int i){
 
 void pressure_dependence_removal_instlumi::Loop(TString input_file_path, TString input_file_name, TString chamber_string, TString output_file_path, TString output_folder_name)
 {
+//  double low_value = 12; 
+//  double up_value = 16;
   chamber_string_name = chamber_string;
 	detregionstr="_dataset";
 	output_path = output_file_path;
@@ -246,20 +282,23 @@ void pressure_dependence_removal_instlumi::Loop(TString input_file_path, TString
   double nentries;
 
 	time_t initial_time, final_time;
-	 
-	if(year=="2016"){
-	 	initial_time	= 1462060800 ; // 1 May 2016 : 00 : 00 : 00
-	  final_time = 1477958400; // 31 Dec 2016 : 00 : 00 : 00
-	}
-	if(year=="2017"){
-	 	initial_time	= 1462060800 ; // 1 May 2016 : 00 : 00 : 00
-	 final_time = 1477958400; // 31 Dec 2016 : 00 : 00 : 00
-	}
-	if(year=="2018"){
-	 	initial_time	= 1462060800 ; // 1 May 2016 : 00 : 00 : 00
-	 final_time = 1477958400; // 31 Dec 2016 : 00 : 00 : 00
-	}
-
+ 
+  time_t bin_width = 86400;
+  //time_t bin_width = 43200;
+  if(year=="2016"){
+    initial_time  = 1462838400 ; // 10 May 2016 : 00 : 00 : 00
+    final_time = 1477871999; // 30 Oct 2016 : 23 : 59 : 59
+  }
+  else  if(year=="2017"){
+    initial_time  = 1497484800 ; // 15 June 2017 : 00 : 00 : 00
+    final_time = 1510790399; // 15 Nov 2017 : 23 : 59 : 59
+  }
+  else if(year=="2018"){
+    initial_time  = 1527206400 ; // 25 April 2018 : 00 : 00 : 00
+    final_time = 1540511999; // 25 Oct 2018 : 23 : 59 : 59
+  }
+   // Calculate the number of bins
+   int nbins = ((final_time - initial_time + 1) / bin_width);
 
 	 gStyle->SetTimeOffset(0.);
    // we are passing name of the input file when calling the macro 
@@ -301,9 +340,14 @@ void pressure_dependence_removal_instlumi::Loop(TString input_file_path, TString
         if(_rhid> 2000000) rhidreduced +=400;
         int idforcorr = (iszmumu )? 0: rhidreduced ;
 
-       // if(rhidreduced!=42 && rhidreduced!=43) continue; 
-
         if(abs(_HV-_HV_nominal) >10) continue;
+         // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+         if(_runNb >=300574 && _runNb <=301461) continue;
+        //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+        if(_runNb >=318828 && _runNb <=319993) continue;
+        //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+        if(_runNb >=323414 && _runNb <=325172) continue;
+
         passed_events++;
 
  			  double charge_equalized = _rhsumQ_equalised_HV_data;
@@ -390,7 +434,9 @@ if(pressure_corr) {
 
       if(pressure_corr_2017==true){
   		 if( integratelumi_2016_high <_integratelumi && _integratelumi<= integratelumi_2017_high) { 
-        if(intlumi_instlumi_const == true){
+         // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+         if(_runNb >=300574 && _runNb <=301461) continue;
+         if(intlumi_instlumi_const == true){
     		 if(_integratelumi<intlumi_low_cut_2017 ) continue;
          if(_integratelumi>intlumi_up_cut_2017) continue;
          if(_instlumi<instlumi_low_cut_2017) continue;
@@ -404,6 +450,12 @@ if(pressure_corr) {
 
      if(pressure_corr_2018==true){
 		    if( integratelumi_2017_high <_integratelumi) { 
+
+          // Removnig the periods corresponding to the recuperated gas system 
+          //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+          if(_runNb >=318828 && _runNb <=319993) continue;
+          //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+          if(_runNb >=323414 && _runNb <=325172) continue;
           if(intlumi_instlumi_const == true){
   			    if(_integratelumi<intlumi_low_cut_2018 ) continue;
    	        if(_integratelumi>intlumi_up_cut_2018) continue;
@@ -502,6 +554,8 @@ if(pressure_corr) {
        if(intlumi_const == true){
   			 if(_integratelumi<intlumi_low_cut_2016 ) continue;
    	     if(_integratelumi>intlumi_up_cut_2016) continue;
+//  			 if(_integratelumi<low_value ) continue;
+//   	     if(_integratelumi>up_value) continue;
        }
 
        if(pressure_corr_2016==true){
@@ -521,6 +575,8 @@ if(pressure_corr) {
      
      if(instlumi_corr_2017==true){
       if( integratelumi_2016_high <_integratelumi && _integratelumi<= integratelumi_2017_high) { 
+         // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+         if(_runNb >=300574 && _runNb <=301461) continue;
        if(intlumi_const == true){
     		 if(_integratelumi<intlumi_low_cut_2017 ) continue;
          if(_integratelumi>intlumi_up_cut_2017) continue;
@@ -544,6 +600,13 @@ if(pressure_corr) {
 
       if(instlumi_corr_2018==true){ 
        if( integratelumi_2017_high <_integratelumi) { 
+
+          // Removnig the periods corresponding to the recuperated gas system 
+          //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+          if(_runNb >=318828 && _runNb <=319993) continue;
+          //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+          if(_runNb >=323414 && _runNb <=325172) continue;
+
         if(intlumi_const == true){
   			 if(_integratelumi<intlumi_low_cut_2018 ) continue;
    	     if(_integratelumi>intlumi_up_cut_2018) continue;
@@ -650,7 +713,8 @@ if(second_iteration){
          if(_instlumi>instlumi_up_cut_2016 ) continue;
        }
 
-        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2016, params_instlumi_slope_avg_2016) ; 
+        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ); 
+        //charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2016, params_instlumi_slope_avg_2016) ; 
 
        hchargevspressure_second_2016->Fill(charge_equalized, _pressure , rhidreduced);
        //hchargevspressure_2016->Fill(_rhsumQ, _pressure , rhidreduced);
@@ -660,13 +724,16 @@ if(second_iteration){
 
       if(pressure_corr_2017==true){
   		 if( integratelumi_2016_high <_integratelumi && _integratelumi<= integratelumi_2017_high) { 
+         // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+         if(_runNb >=300574 && _runNb <=301461) continue;
         if(intlumi_instlumi_const == true){
     		 if(_integratelumi<intlumi_low_cut_2017 ) continue;
          if(_integratelumi>intlumi_up_cut_2017) continue;
          if(_instlumi<instlumi_low_cut_2017) continue;
          if(_instlumi>instlumi_up_cut_2017 ) continue;
        }
-        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2017, params_instlumi_slope_avg_2017) ; 
+        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ); 
+       // charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2017, params_instlumi_slope_avg_2017) ; 
 
        hchargevspressure_second_2017->Fill(charge_equalized, _pressure , rhidreduced);
 			 if(debug) std::cout<<" inside the 2017 instlumi loop"<<std::endl;
@@ -675,6 +742,12 @@ if(second_iteration){
 
      if(pressure_corr_2018==true){
 		    if( integratelumi_2017_high <_integratelumi) { 
+          // Removnig the periods corresponding to the recuperated gas system 
+          //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+          if(_runNb >=318828 && _runNb <=319993) continue;
+          //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+          if(_runNb >=323414 && _runNb <=325172) continue;
+
           if(intlumi_instlumi_const == true){
   			    if(_integratelumi<intlumi_low_cut_2018 ) continue;
    	        if(_integratelumi>intlumi_up_cut_2018) continue;
@@ -682,7 +755,8 @@ if(second_iteration){
             if(_instlumi>instlumi_up_cut_2018 ) continue;
           }
         
-          charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2018, params_instlumi_slope_avg_2018) ; 
+          charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) ; 
+          //charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) * ApplyCorrection(_instlumi, "instlumi", params_instlumi_const_avg_2018, params_instlumi_slope_avg_2018) ; 
 
           // ignore the end part of Run2 when HV was changed and giving us bad fit
           hchargevspressure_second_2018->Fill(charge_equalized, _pressure , rhidreduced);
@@ -750,9 +824,12 @@ if(second_iteration){
        if(intlumi_const == true){
   			 if(_integratelumi<intlumi_low_cut_2016 ) continue;
    	     if(_integratelumi>intlumi_up_cut_2016) continue;
+//  			 if(_integratelumi<low_value ) continue;
+//   	     if(_integratelumi>up_value) continue;
+
        }
-        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2016 ,params_instlumi_slope_avg_2016 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2016 ,params_pressure_slope_avg_second_2016 ) ; 
-        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2016 ,params_instlumi_slope_avg_2016 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2016 ,params_pressure_slope_avg_second_2016 ) ; 
+//        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2016 ,params_instlumi_slope_avg_2016 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2016 ,params_pressure_slope_avg_second_2016 ) ; 
+        charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2016 ,params_pressure_slope_avg_2016 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2016 ,params_instlumi_slope_avg_2016 ); 
         hchargevsinstlumi_second_2016->Fill(charge_equalized, _instlumi , rhidreduced);
 			 if(debug) std::cout<<" inside the 2016 instlumi loop"<<std::endl;
       }// end 2016 filling
@@ -760,11 +837,14 @@ if(second_iteration){
      
      if(instlumi_corr_2017==true){
       if( integratelumi_2016_high <_integratelumi && _integratelumi<= integratelumi_2017_high) { 
+       // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+       if(_runNb >=300574 && _runNb <=301461) continue;
        if(intlumi_const == true){
     		 if(_integratelumi<intlumi_low_cut_2017 ) continue;
          if(_integratelumi>intlumi_up_cut_2017) continue;
        }
-         charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2017 ,params_instlumi_slope_avg_2017 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2017 ,params_pressure_slope_avg_second_2017 ) ; 
+         //charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2017 ,params_instlumi_slope_avg_2017 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2017 ,params_pressure_slope_avg_second_2017 ) ; 
+         charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2017 ,params_pressure_slope_avg_2017 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2017 ,params_instlumi_slope_avg_2017 ); 
 
        hchargevsinstlumi_second_2017->Fill(charge_equalized, _instlumi , rhidreduced);
 			 if(debug) std::cout<<" inside the 2017 instlumi loop"<<std::endl;
@@ -773,12 +853,19 @@ if(second_iteration){
 
       if(instlumi_corr_2018==true){ 
        if( integratelumi_2017_high <_integratelumi) { 
+          // Removnig the periods corresponding to the recuperated gas system 
+          //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+          if(_runNb >=318828 && _runNb <=319993) continue;
+          //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+          if(_runNb >=323414 && _runNb <=325172) continue;
+
         if(intlumi_const == true){
   			 if(_integratelumi<intlumi_low_cut_2018 ) continue;
    	     if(_integratelumi>intlumi_up_cut_2018) continue;
         }
 
-         charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2018 ,params_instlumi_slope_avg_2018 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2018 ,params_pressure_slope_avg_second_2018 ) ; 
+         //charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2018 ,params_instlumi_slope_avg_2018 ) *ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2018 ,params_pressure_slope_avg_second_2018 ) ; 
+         charge_equalized  = _rhsumQ_equalised_HV_data * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2018 ,params_instlumi_slope_avg_2018 ); 
 
         hchargevsinstlumi_second_2018->Fill(charge_equalized, _instlumi , rhidreduced);
 			  if(debug) std::cout<<" inside the 2018 instlumi loop"<<std::endl;
@@ -842,6 +929,13 @@ if(second_iteration){
 
 //      if(rhidreduced!=42 && rhidreduced!=43) continue; 
      if(abs(_HV-_HV_nominal) >10) continue;
+     // removing periods with issue (300574 (7 Aug 2017) - 301461 (19Aug 2017) ie. intlumi - [50,54) fb-1 )
+     if(_runNb >=300574 && _runNb <=301461) continue;
+     //first recuperation in (13June 2018 - 20 July 2018 -removing 15 days after fresh CF4 ie. 5July 2018) 
+     if(_runNb >=318828 && _runNb <=319993) continue;
+     //second recuperation in (12 Sep 2018 - 25 Oct 2018 -removing 15 days after fresh CF4 ie. 10 Oct 2018) 
+     if(_runNb >=323414 && _runNb <=325172) continue;
+
 		 //applying pressure correction by taking average of slope dependence in plus and minus endcap 
       if(intlumi_corr_2016 ==true) {
         if(_integratelumi <= integratelumi_2016_high){
@@ -898,10 +992,6 @@ if(second_iteration){
 
       		  charge  = charge * ApplyCorrection( _instlumi ,"instlumi",   params_instlumi_const_avg_2018 ,params_instlumi_slope_avg_2018 );
             charge_equalized  = charge_equalized * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_2018 ,params_instlumi_slope_avg_2018 ) ; 
-            /*if(second_iteration){
-              charge_equalized  = charge_equalized * ApplyCorrection( _pressure ,"pressure", params_pressure_const_avg_second_2018 ,params_pressure_slope_avg_second_2018 ) * ApplyCorrection( _instlumi ,"instlumi", params_instlumi_const_avg_second_2018 ,params_instlumi_slope_avg_second_2018 ) ; 
-            } */
-
           }
           else{
       		  charge  = _rhsumQ_RAW * ApplyCorrection( _pressure ,"pressure",   params_pressure_const_avg_2018 ,params_pressure_slope_avg_2018 );
@@ -912,6 +1002,8 @@ if(second_iteration){
         }    // end of 2018 corrections for intlumi
       } // end of 2018 corrections 
     hchargevsintegratelumi->Fill(charge_equalized, _integratelumi, rhidreduced);
+    
+    if(time_final){ hchargevstime->Fill(charge_equalized, _timesecond, rhidreduced); }
    } // end of going through each tree entry
 
     if(intlumi_final) {
@@ -997,7 +1089,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
   if(thevar.Index("instlumi")>=0) xtitle = "Inst Lumi (#mub s)^{-1}";
   if(thevar.Index("integrate")>=0) xtitle = "Integrated luminosity (fb^{-1})";
   if(thevar.Index("time")>=0) xtitle = "time";
- 
+
  
 	outf->cd();
 
@@ -1020,6 +1112,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 
 	TDirectoryFile *dir_var_name =  (TDirectoryFile*) outf->mkdir(dir_name_var);
 	dir_var_name->cd();
+   myh->AddDirectory(kFALSE); 
 	// result function is used to store the value of the slope and constant after fitting 
   vector < std::pair<double, double >  > result ; //Assume that fitted function has two parameters
   
@@ -1109,14 +1202,15 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
     if(h!=0) rhidshort ="chamber"+ (TString) Form("%d", chambernb)  +"_layer"+ (TString)Form("%d",h%10) + endcap;
     int layernb = h%10; 
     if(h==0) rhidshort = "allgoodchannels";
-
+    myh->SetDirectory(nullptr) ;
     for (int j = 1; j <= myh->GetNbinsY(); j++) {
-    TH1D* proj1 = (h == 0) ? nullptr : (TH1D*)(myh->ProjectionX("_px", j, j, h, h))->Clone();
+    //TH1D* proj1 = (h == 0) ? nullptr : (TH1D*)(myh->ProjectionX("_px", j, j, h, h))->Clone();
+    TH1D* proj1 = (h == 0) ? nullptr : (TH1D*)(myh->ProjectionX("_px", j, j, h, h));
     proj1->AddDirectory(kFALSE);
     if (proj1) {  // Only add if the projection is not null
         num_entries[h] += proj1->GetEntries();
         //num_entries_all_bins += proj1->GetEntries();
-        delete proj1;  // Clean up the memory to avoid memory leaks
+//        delete proj1;  // Clean up the memory to avoid memory leaks
       }
     }
     if(num_entries[h]!=0) nb_channels++;
@@ -1162,17 +1256,17 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
       //num_entries_1D_hist_all_bins_plus = nullptr;
 
 		std::cout<<" nb channels "<<nb_channels<<std::endl;
-/*		double sum = 0;
-    double sum_sq = 0;
-    for (int n : num_entries) {
-        sum += n;
-        sum_sq += n * n;
-    }
-  */
+//		double sum = 0;
+//    double sum_sq = 0;
+//    for (int n : num_entries) {
+//        sum += n;
+//        sum_sq += n * n;
+//    }
+  
     // do this only for pressure and instlumi but not integrate lumi since number of entries are a lot, and the program just looses its mind
     // Defining nrechits = 10000 as threshold for integrated luminosity
   double threshold;
-  if(thevar=="_integratelumi_initial" || thevar=="_integratelumi"){
+  if(thevar=="_integratelumi_initial" || thevar=="_integratelumi" ||thevar=="_timesecond_initial" || thevar=="_timesecond"){
    threshold = 1000;
 //   if(chamber_string=="ME11b") threshold = 15000;
 //   if(chamber_string=="ME12HV1") threshold = 15000;
@@ -1189,11 +1283,12 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 //   threshold = mean - k * std_dev;
 
   if(thevar=="_instlumi" || thevar=="_instlumi_second" ){
-   threshold = 1000;
+   //threshold = 1000;
+   threshold = 0;
   }
   else if(thevar=="_pressure" || thevar=="_pressure_second" ){
     
-   threshold = 500;
+   threshold = 0;
   }
   }
   for (int h = 0; h < 770; ++h) {
@@ -1235,7 +1330,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
       //Declare a new histo to store trimmed mean for different values of the variable of interest (pressure, inst L,...)
       TString htrimmeanvsXname = "htrimmean"+filename+title+thevar+"_"+rhidshort;
       TH1D * htrimmeanvsX = new TH1D(htrimmeanvsXname,"", myh->GetNbinsY() , myh->GetYaxis()->GetBinLowEdge(1) , myh->GetYaxis()->GetBinLowEdge( myh->GetNbinsY()+1) );
-     // htrimmeanvsX->SetDirectory(nullptr);
+      htrimmeanvsX->SetDirectory(0);
       double renormalfactor = 1;    
       double error_renormalfactor =0 ;    
       double error_value=0 ; 
@@ -1261,15 +1356,6 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 
         // saving all the distributions 
         
-  /*			if(rhidshort.Contains("chamber1") || rhidshort.Contains("chamber4") ||rhidshort.Contains("chamber5") || rhidshort.Contains("chamber6") || rhidshort.Contains("chamber7") || rhidshort.Contains("chamber8") || rhidshort.Contains("chamber9") || rhidshort.Contains("chamber20") ||rhidshort.Contains("chamber21") || rhidshort.Contains("chamber24") || rhidshort.Contains("chamber25") || rhidshort.Contains("chamber36") ) {  
-        c_individual = new TCanvas("c_individual", " for a  bin , charge distribution ");
-        c_individual->cd();
-        gStyle->SetOptStat(111111211);
-        proj->Draw();
-        TString bin_nb = TString::Format("%d",j);
-        proj->SetTitle("charge : "+rhidshort+" bin : "+bin_nb);
-        c_individual->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"_new_2016/int_lum_bin_channel_"+rhidshort+"_bin_"+bin_nb+"_"+treename+".pdf");  
-        } */
   //		  std::cout<<"Before adding the channels the integral for "<<rhidshort<<" bin "<<bin_nb<<" var "<<thevar<<" integral "<<proj->Integral()<<" entries "<<proj->GetEntries()<<std::endl;
         if(h==0) {
         proj->Reset("ICESM");
@@ -1307,19 +1393,6 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 
               TH1D * h_prov = (TH1D*) ( myh->ProjectionX("_px",j,j, ichan,ichan) )->Clone();
               h_prov->AddDirectory(kFALSE);
-  /*
-
-        if(rhidshort.Contains("chamber1") || rhidshort.Contains("chamber4") ||rhidshort.Contains("chamber5") || rhidshort.Contains("chamber6") || rhidshort.Contains("chamber7") || rhidshort.Contains("chamber8") || rhidshort.Contains("chamber9") || rhidshort.Contains("chamber20") ||rhidshort.Contains("chamber21") || rhidshort.Contains("chamber24") || rhidshort.Contains("chamber25") || rhidshort.Contains("chamber36")  ) {  
-        c_individual = new TCanvas("c_individual", " for 1st bin , charge distribution ");
-        c_individual->cd();
-        gStyle->SetOptStat(111111111);
-        //gStyle->SetOptStat("ksiourmen");
-        h_prov->Draw();
-        TString s = TString::Format("%d",ichan);
-        h_prov->SetTitle("charge : "+rhidshort+ " channel : "+s + " correspoinding :  "+h);
-        c_individual->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"/int_lum_bin_"+rhidshort+"_channel_"+s+"_bin_"+bin_nb+".pdf"); 
-        }  */
-
               TH1D * h_prov_new = (TH1D*) h_prov->Clone();
               h_prov_new->AddDirectory(kFALSE);
               h_prov_new->Reset();
@@ -1329,9 +1402,10 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
               h_prov_new->Sumw2();
 
               // atleast we will add only those channels for which we have more than 100 entries
-              if(h_prov->Integral()<100) continue;
+            //  if(h_prov->Integral()<100) continue;
 
-              normal = h_prov->Integral();
+              normal = h_prov->Integral() + h_prov->GetBinContent(h_prov->GetNbinsX()+1);
+              //normal = h_prov->Integral();
               // first trim the histogram then normalize with integral
               int last_bin = 0;
               double integral =0;
@@ -1346,7 +1420,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
               for(int it=1; it<last_bin; it++){
                   new_integral += h_prov->GetBinContent(it); 
               }
-              entries_last_bin = (trimmean*normal - new_integral); 
+              entries_last_bin = (int) (trimmean*normal - new_integral); 
                 
               //if(debug_statements) std::cout<<"entries in last bin : rhid"<<rhidshort<<" var"<<thevar<<" bin number"<<j<<" before : "<<h_prov->GetBinContent(last_bin)<<" after :"<<entries_last_bin<<std::endl;
                 
@@ -1356,7 +1430,12 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
                   }
               
                   h_prov_new->SetBinContent(last_bin, entries_last_bin);
+                  if(entries_last_bin!=0) {
                   h_prov_new->SetBinError(last_bin,h_prov->GetBinError(last_bin) * (entries_last_bin / h_prov->GetBinContent(last_bin)));
+                  }
+                  else{
+                  h_prov_new->SetBinError(last_bin,0);
+                  }
 
                 // h_prov_new->SetBinError(last_bin, h_prov->GetBinError(last_bin));
       
@@ -1364,8 +1443,8 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
                     h_prov_new->SetBinContent(it,0);
                     h_prov_new->SetBinError(it,0);
                   } 
-                  
-                  proj->Add(h_prov_new);// to each channel we normalize with respect to total integral acroos the channel , not wrt only trimmed mean integral
+                 
+                 proj->Add(h_prov_new);// to each channel we normalize with respect to total integral acroos the channel , not wrt only trimmed mean integral
                   //normal = h_prov_new->Integral();
 
                 //	proj->Add(h_prov_new,1./normal);// to each channel we normalize with respect to total integral acroos the channel , not wrt only trimmed mean integral
@@ -1391,8 +1470,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 
 
         TH1D *h_trim_new = (TH1D*) proj->Clone() ;
-
-              h_trim_new->AddDirectory(kFALSE);
+        h_trim_new->AddDirectory(kFALSE);
 
         // before truncating lets plot charge distribution 
         //Previously we were truncating only individual channel not all good channels 
@@ -1400,21 +1478,12 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
         // I am reseting stats, so new mean and integral is not interferred with old one
         // Storing the number of events in 1st bin of all the chambers 
 
-/*      if(h!=0 && h!=771 && (j==12 || j==15)){ 
-          int n_entries_bin = proj->Integral();
-          if(j==12){ 
-          num_entries_2D_hist_12th_bin->SetBinContent(chambernb, layernb, n_entries_bin);
-          }
-          if(j==15){ 
-          num_entries_2D_hist_15th_bin->SetBinContent(chambernb, layernb, n_entries_bin);
-          } 
-        } */ 
         if(h!=0){//Do the truncation, if h ==0 and h==771 the truncation is already done
             // The next feew stepas are to find till which bin we need to chopp off tail
             h_trim_new->Reset();
             h_trim_new->ResetStats();
-            //float normal = h_trim->Integral();
-            float normal = proj->Integral();
+            //float normal = proj->Integral();
+            float normal = proj->Integral()+ proj->GetBinContent(proj->GetNbinsX()+1);
             int last_bin = 0;
             for(int it = 1; it<=   proj->GetNbinsX() ;it++) {
               if(integral < trimmean * normal){
@@ -1434,7 +1503,12 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 						h_trim_new->SetBinError(it,proj->GetBinError(it));
 					}
 					h_trim_new->SetBinContent(last_bin, entries_last_bin);
+          if(entries_last_bin!=0){
 				  h_trim_new->SetBinError(last_bin, proj->GetBinError(last_bin) * (entries_last_bin / proj->GetBinContent(last_bin)));
+          }
+          else{
+            h_trim_new->SetBinError(last_bin,0);
+          }
 					for(int it=last_bin+1; it<=proj->GetNbinsX() ; it++) {
 						h_trim_new->SetBinContent(it,0);
 						h_trim_new->SetBinError(it,0);
@@ -1448,24 +1522,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 			 proj->SetTitle(title_for_proj);
 			 proj->SetName(name_for_proj);
        // Saving before trim and after trim histograms for few chambers	
-/*       if(proj->Integral()>0 && savehistos && (rhidshort.Contains("chamber4") || rhidshort.Contains("allgoodchannels")) ){
-          std::cout<<"  entered in plots *******************************************************************"<<std::endl;
-         
-				 TCanvas *canvas_charge = new TCanvas();
- 			 	 canvas_charge->Divide(2,1);
- 			 	 canvas_charge->cd(1);
-
-	    	 proj->Draw("E");
-			   gStyle->SetOptStat(111111211);
-
- 			 	 canvas_charge->cd(2);
-	    	 //h_trim_new->Draw("E");
-	    	 h_trim_new->Draw("E");
- 			 	 canvas_charge->SaveAs(output_plots_folder+"plotfolder_"+chamber_string_name+"_test/charge_distribution"+title+"_"+rhidshort+"vs"+"_era"+dir_name_var+"_"+thevar+"_bin"+j+"_channel"+h+"_before_trim.pdf"); 
-
-          //myfile<<j<<"\t"<<rhidshort<<"\t"<<h_trim_new->GetMean()<<"\t"<<h_trim_new->GetMeanError()<<std::endl;
-			 }  */
-       if(proj->Integral() < 100) continue;
+      //if(proj->Integral() < 100) continue;
 			 // question is if already the histogram have more than 100 entries, then how the trimmed histogram can have just one entry. Not possible , but don't know why I applied additional cut. Are these two things not same ?  Integral is basically total bin height * mean value, however , 
   	   if(h_trim_new->Integral() ==1) continue;
        htrimmeanvsX->SetBinContent(j, h_trim_new->GetMean() ); 
@@ -1622,6 +1679,7 @@ vector < std::pair<double, double > >  pressure_dependence_removal_instlumi::Get
 //////  h_slopeuncty = nullptr;
 ////
 	std::cout<<" done with one type of variable "<<thevar<<std::endl;
+
   return result;    
  
 } //end of GetSlope function
@@ -1630,6 +1688,7 @@ double pressure_dependence_removal_instlumi::ApplyCorrection( double X ,TString 
   double refvalue = 0;
   if(correctiontype =="pressure"&&!droppressurecorr){
     refvalue =967;
+//    X = floor(X);
     double thecorr =exp(p1*(refvalue-X)); 
 
     return thecorr; 

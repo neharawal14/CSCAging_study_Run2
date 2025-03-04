@@ -6,6 +6,6 @@ arg1=$1
 arg2=$2
 echo " first argument"
 echo $arg1 $arg2
-#g++ -I $ROOTSYS/include main_2016.C ../code_area/Src/pressure_dependence_removal_instlumi.C `root-config --glibs` `root-config --libs` `root-config --cflags`  -L $ROOTSYS/lib -o executable_2016_new
+#g++ -I $ROOTSYS/include main_2016.C ../Code_analysis/pressure_dependence_removal_instlumi.C `root-config --glibs` `root-config --libs` `root-config --cflags`  -L $ROOTSYS/lib -o executable_2016_new
 
 ./executable_2016_new $arg1 $arg2

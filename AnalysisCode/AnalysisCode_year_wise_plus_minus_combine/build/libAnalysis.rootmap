@@ -1,6 +1,0 @@
-[ libAnalysis.so ]
-# List of selected classes
-class SystematicRemoval
-class individual_channels
-header SystematicRemoval.h
-header individual_channels.h

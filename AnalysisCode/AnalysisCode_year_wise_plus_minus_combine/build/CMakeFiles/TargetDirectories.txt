@@ -1,5 +1,0 @@
-/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/AnalysisCode/AnalysisCode_year_wise_plus_minus_combine/build/CMakeFiles/G__Analysis.dir
-/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/AnalysisCode/AnalysisCode_year_wise_plus_minus_combine/build/CMakeFiles/Analysis.dir
-/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/AnalysisCode/AnalysisCode_year_wise_plus_minus_combine/build/CMakeFiles/Analysis_exe.dir
-/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/AnalysisCode/AnalysisCode_year_wise_plus_minus_combine/build/CMakeFiles/edit_cache.dir
-/afs/cern.ch/user/n/nrawal/work/CSCAgeing_code_study/AnalysisCode/AnalysisCode_year_wise_plus_minus_combine/build/CMakeFiles/rebuild_cache.dir
